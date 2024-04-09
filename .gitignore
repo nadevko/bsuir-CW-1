@@ -1,0 +1,5 @@
+dist/
+_minted-report/
+build/
+svg-inkscape/
+indent.log
