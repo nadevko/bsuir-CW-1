@@ -3,3 +3,5 @@ _minted-report/
 build/
 svg-inkscape/
 indent.log
+/builddir/
+/.vscode
