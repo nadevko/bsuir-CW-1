@@ -1,7 +1,7 @@
-dist/
 _minted-report/
 build/
 svg-inkscape/
 indent.log
 /builddir/
-/.vscode
+/.vscode/
+/result

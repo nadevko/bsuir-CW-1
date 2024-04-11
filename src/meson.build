@@ -7,7 +7,8 @@ gresources = gnome.compile_resources(
 )
 
 executable(
-    'cw1',
+    meson.project_name(),
     sources : [ 'main.cc', gresources ],
-    dependencies : gtkmm
+    dependencies : gtkmm,
+    install : true
 )

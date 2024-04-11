@@ -1,5 +1,5 @@
 project(
-    'io.github.nadevko.cw1',
+    'cw1',
     'c', 'cpp',
     version : '4.10.1',
     license : 'GPL-3.0-only',
