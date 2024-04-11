@@ -6,7 +6,16 @@ stdenv.mkDerivation rec {
 
   src = ./.;
 
-  nativeBuildInputs = [ meson ninja pkg-config gtkmm4 wrapGAppsHook4 ];
+  nativeBuildInputs = [
+    meson
+    ninja
+    pkg-config
+    gtkmm4
+    git
+    wrapGAppsHook4
+    desktop-file-utils
+    blueprint-compiler
+  ];
 
   meta = with lib; {
     description = "Image dedublication tool";

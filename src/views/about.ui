@@ -2,17 +2,20 @@
 <!-- Created with Cambalache 0.16.0 -->
 <interface domain="io.github.nadevko.cw1">
   <!-- interface-name main.ui -->
-  <requires lib="gtk" version="4.0"/>
+  <requires lib="gtk" version="4.6"/>
   <object class="GtkAboutDialog" id="about">
     <property name="artists">nadevko</property>
     <property name="authors">nadevko</property>
-    <property name="comments">Image dedublication tool</property>
+    <property name="comments">Image deduplication tool</property>
+    <property name="copyright">Copyright (c) 2024</property>
     <property name="documenters">nadevko</property>
-    <property name="license-type">gpl-3-0</property>
+    <property name="icon-name">cw1</property>
+    <property name="license-type">gpl-3-0-only</property>
     <property name="logo-icon-name">cw1</property>
     <property name="program-name">CW1</property>
     <property name="version">1.0</property>
     <property name="website">https://nadevko.github.io/bsuir-CW-1</property>
     <property name="website-label">GitHub</property>
+    <property name="wrap-license">True</property>
   </object>
 </interface>

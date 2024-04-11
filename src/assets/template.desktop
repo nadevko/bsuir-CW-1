@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Version=@APP_VERSION@
+Name=@APP_NAME@
+Comment=Image deduplication tool
+Exec=cw1
+Icon=@APP_ID@
+Terminal=false
+Categories=Utility;FileTools;GNOME;GTK;
+Keywords=dedupe;deduplication;

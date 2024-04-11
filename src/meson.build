@@ -1,14 +1,15 @@
 gtkmm = dependency('gtkmm-4.0')
-gnome = import('gnome')
 
 gresources = gnome.compile_resources(
     'gresources',
-    'gresources.xml'
+    'gresources.xml',
 )
 
+subdir('assets')
+
 executable(
-    meson.project_name(),
-    sources : [ 'main.cc', gresources ],
-    dependencies : gtkmm,
-    install : true
+    'cw1',
+    sources: ['main.cc', gresources],
+    dependencies: gtkmm,
+    install: true,
 )
