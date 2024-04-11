@@ -9,7 +9,6 @@ project(
         'warning_level=1',
         'buildtype=debugoptimized'
     ],
-    meson_version : '>= 1.3.2'
+    meson_version : '>= 1.1.0'
 )
-gtkmm = dependency('gtkmm-4.0')
-executable('cw1', 'src/main.cc', dependencies : gtkmm)
+subdir('src')

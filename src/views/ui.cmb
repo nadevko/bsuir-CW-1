@@ -18,6 +18,7 @@
 	(1,1,"GtkAboutDialog","comments","Image dedublication tool",None,None,None,None,None,None,None,None,None),
 	(1,1,"GtkAboutDialog","documenters","nadevko",None,None,None,None,None,None,None,None,None),
 	(1,1,"GtkAboutDialog","license-type","gpl-3-0",None,None,None,None,None,None,None,None,None),
+	(1,1,"GtkAboutDialog","logo-icon-name","cw1",None,None,None,None,None,None,None,None,None),
 	(1,1,"GtkAboutDialog","program-name","CW1",None,None,None,None,None,None,None,None,None),
 	(1,1,"GtkAboutDialog","version","1.0",None,None,None,None,None,None,None,None,None),
 	(1,1,"GtkAboutDialog","website","https://nadevko.github.io/bsuir-CW-1",None,None,None,None,None,None,None,None,None),
