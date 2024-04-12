@@ -7,6 +7,7 @@ mkShell rec {
     pkg-config
     cmake-format
     desktop-file-utils
+    plantuml
     cambalache
     (import ./. { inherit pkgs; })
   ];

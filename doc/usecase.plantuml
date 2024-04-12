@@ -1,0 +1,51 @@
+@startuml use case
+!theme mono
+:Пользователь: as user
+(Работа с файлами) as unite
+(Удалить дубликаты) as dup
+(Найти файлы по критериям) as find
+(Удалить файлы) as remove
+(Переместить файлы) as move
+(Скопировать файлы) as cp
+(Переименовать файлы) as rename
+(Сконвертировать файлы) as convert
+
+unite <|-right- find
+unite <|-down- move
+unite <|-down- remove
+unite <|-up- rename
+unite <|-left- cp
+move <.. convert : <<extend>>
+
+(Поиск по подстроке) as substr
+(Поиск по регулярному выражению) as regex
+(Поиск по проценту схожести) as simularity
+
+user -down- unite
+simularity ..> dup : <<include>>
+remove ..> dup : <<include>>
+unite <|-- dup
+rename -|> move
+
+find <.. substr : <<extend>>
+find <.up. regex : <<extend>>
+find <.down. simularity : <<extend>>
+
+(Просмотр выборки файлов) as view
+view -down-|> unite
+view - user
+
+(Сортировка выборки файлов) as sort
+(Сортировка по имени) as name
+(Сортировка по дате изменения) as date
+(Сортировка по размеру) as size
+sort .down.> view : <<include>>
+sort <|-up- name
+sort <|-right- date
+sort <|-up- size
+
+(Очистка) as clean
+unite <|- clean
+dup ..> clean : <<include>>
+convert ..> clean : <<include>>
+@enduml
