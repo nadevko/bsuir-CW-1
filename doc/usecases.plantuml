@@ -1,4 +1,4 @@
-@startuml use case
+@startuml usecases
 !theme mono
 :Пользователь: as user
 (Работа с файлами) as unite
