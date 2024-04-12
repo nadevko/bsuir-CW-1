@@ -2,5 +2,6 @@
 <gresources>
   <gresource prefix="/io/github/nadevko/cw1">
     <file>views/about.ui</file>
+    <file>views/application.ui</file>
   </gresource>
 </gresources>

@@ -6,30 +6,29 @@
 	(2,None,None,"application.ui",None,None,None,None,"io.github.nadevko.cw1",None,None)
   </ui>
   <object>
-	(1,1,"GtkAboutDialog","about",None,None,None,None,-1,None),
-	(2,1,"GtkApplicationWindow",None,None,None,None,None,-1,None),
-	(2,2,"GtkBox",None,1,None,None,None,-1,None),
-	(2,3,"GtkBox",None,2,None,None,None,None,None),
-	(2,4,"GtkSearchEntry",None,3,None,None,None,None,None)
+	(1,1,"GtkAboutDialog","About",None,None,None,None,-1,None),
+	(2,1,"GtkApplicationWindow","Application",None,None,None,None,-1,None),
+	(2,2,"GtkButton",None,1,None,None,None,-1,None)
   </object>
   <object_property>
 	(1,1,"GtkAboutDialog","artists","nadevko",None,None,None,None,None,None,None,None,None),
 	(1,1,"GtkAboutDialog","authors","nadevko",None,None,None,None,None,None,None,None,None),
 	(1,1,"GtkAboutDialog","comments","Image deduplication tool",None,None,None,None,None,None,None,None,None),
-	(1,1,"GtkAboutDialog","copyright","Copyright (c) 2024",None,None,None,None,None,None,None,None,None),
+	(1,1,"GtkAboutDialog","copyright","copyright (c) 2024 nadevko",None,None,None,None,None,None,None,None,None),
 	(1,1,"GtkAboutDialog","documenters","nadevko",None,None,None,None,None,None,None,None,None),
 	(1,1,"GtkAboutDialog","license-type","gpl-3-0-only",None,None,None,None,None,None,None,None,None),
 	(1,1,"GtkAboutDialog","logo-icon-name","cw1",None,None,None,None,None,None,None,None,None),
-	(1,1,"GtkAboutDialog","program-name","CW1",None,None,None,None,None,None,None,None,None),
+	(1,1,"GtkAboutDialog","program-name","Course Work #1",None,None,None,None,None,None,None,None,None),
 	(1,1,"GtkAboutDialog","version","1.0",None,None,None,None,None,None,None,None,None),
 	(1,1,"GtkAboutDialog","website","https://nadevko.github.io/bsuir-CW-1",None,None,None,None,None,None,None,None,None),
 	(1,1,"GtkAboutDialog","website-label","GitHub",None,None,None,None,None,None,None,None,None),
 	(1,1,"GtkAboutDialog","wrap-license","True",None,None,None,None,None,None,None,None,None),
 	(1,1,"GtkWindow","icon-name","cw1",None,None,None,None,None,None,None,None,None),
-	(2,1,"GtkApplicationWindow","show-menubar","True",None,None,None,None,None,None,None,None,None),
-	(2,1,"GtkWindow","title","cw 1",None,None,None,None,None,None,None,None,None),
-	(2,2,"GtkOrientable","orientation","vertical",None,None,None,None,None,None,None,None,None),
-	(2,3,"GtkOrientable","orientation","vertical",None,None,None,None,None,None,None,None,None),
-	(2,4,"GtkSearchEntry","placeholder-text","\\.jpe?g$",None,None,None,None,None,None,None,None,None)
+	(1,1,"GtkWindow","modal","True",None,None,None,None,None,None,None,None,None),
+	(2,1,"GtkWindow","icon-name","cw1",None,None,None,None,None,None,None,None,None),
+	(2,1,"GtkWindow","title","cw1",None,None,None,None,None,None,None,None,None)
   </object_property>
+  <object_signal>
+	(1,2,2,"GtkButton","clicked","echo",None,None,None,None,None)
+  </object_signal>
 </cambalache-project>
