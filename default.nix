@@ -14,7 +14,7 @@ stdenv.mkDerivation rec {
     git
     wrapGAppsHook4
     desktop-file-utils
-    blueprint-compiler
+    gettext
   ];
 
   meta = with lib; {

@@ -10,6 +10,6 @@ subdir('assets')
 executable(
     'cw1',
     sources: ['main.cc', gresources],
-    dependencies: gtkmm,
+    dependencies: [gtkmm, config_h],
     install: true,
 )

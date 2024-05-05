@@ -6,7 +6,7 @@ project(
     license: 'GPL-3.0-only',
     license_files: 'LICENSE',
     default_options: [
-        'cpp_std=c++17',
+        'cpp_std=c++20',
         'warning_level=1',
         'buildtype=debugoptimized',
     ],
@@ -29,11 +29,21 @@ conf = configuration_data()
 conf.set('APP_NAME', APP_NAME)
 conf.set('APP_ID', APP_ID)
 conf.set('APP_VERSION', APP_VERSION)
+conf.set_quoted('GETTEXT_PACKAGE', meson.project_name())
+conf.set_quoted('LOCALE_DIR', '/home/nadevko/Stol/bsuir/CW-1/builddir/po')
+
+config_h = declare_dependency(
+    sources: vcs_tag(
+        command: ['git', 'rev-parse', '--short', 'HEAD'],
+        fallback: 'Could not find commit of build',
+        input: configure_file(output: 'config.h.in', configuration: conf),
+        output: 'config.h',
+    ),
+)
 
 gnome = import('gnome')
 
+subdir('po')
 subdir('src')
 
-gnome.post_install(
-	update_desktop_database: true
-)
+gnome.post_install(update_desktop_database: true)

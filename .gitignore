@@ -1,7 +1,8 @@
-_minted-report/
+_minted-*/
 build/
 svg-inkscape/
 indent.log
 /builddir/
 /.vscode/
 /result
+/tex

@@ -9,9 +9,9 @@ mkShell rec {
     desktop-file-utils
     plantuml
     cambalache
-    (import ./. { inherit pkgs; })
+    # (import ./. { inherit pkgs; })
   ];
-  buildInputs = [ gtkmm4.dev ];
+  buildInputs = [ gtkmm4.dev gettext ];
   NIX_LD_LIBRARY_PATH = lib.makeLibraryPath ([ stdenv.cc.cc ] ++ buildInputs);
   NIX_LD = "${stdenv.cc.libc_bin}/bin/ld.so";
 }
