@@ -3,6 +3,13 @@
 #include <glib/gi18n.h>
 
 #include <iostream>
+#include <opencv2/opencv.hpp>
+#include <vector>
+
+#include "giomm/file.h"
+#include "glibmm/refptr.h"
+#include "image.hh"
+#include "main.hh"
 
 // make new app instance
 CW1::Application::Application()
@@ -12,7 +19,7 @@ CW1::Application::Application()
   // set pretty name
   Glib::set_application_name("CW1");
 
-  // define arguments
+  // define options
   add_main_option_entry(Gtk::Application::OptionType::BOOL, "version", 'v',
                         _("Display version information and exit"));
   add_main_option_entry(Gtk::Application::OptionType::FILENAME_VECTOR,
@@ -41,11 +48,28 @@ int CW1::Application::on_command_line(
     return EXIT_SUCCESS;
   }
 
-  Glib::OptionGroup::vecstrings remaining;
+  std::vector<std::string> remaining;
   options->lookup_value(G_OPTION_REMAINING, remaining);
 
-  if (remaining.empty()) activate();
-  return EXIT_SUCCESS;
+  switch (remaining.size()) {
+    case 0: {
+      activate();
+      return EXIT_SUCCESS;
+    }
+    case 1: {
+      return EXIT_FAILURE;
+    }
+    default: {
+      std::vector<CW1::Image> images;
+      for (auto path : remaining)
+        images.push_back(CW1::Image(Gio::File::create_for_path(path)));
+      for (auto i = images.begin(); i != images.end(); i++)
+        for (auto j = images.begin(); j != i; j++)
+          std::cout << i->file->get_path() << " " << j->file->get_path() << " "
+                    << i->compare(*j) << "\n";
+      return EXIT_SUCCESS;
+    }
+  }
 }
 
 // gui session

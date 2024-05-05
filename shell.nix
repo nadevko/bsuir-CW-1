@@ -11,7 +11,7 @@ mkShell rec {
     cambalache
     # (import ./. { inherit pkgs; })
   ];
-  buildInputs = [ gtkmm4.dev gettext ];
+  buildInputs = [ gtkmm4.dev gettext opencv ];
   NIX_LD_LIBRARY_PATH = lib.makeLibraryPath ([ stdenv.cc.cc ] ++ buildInputs);
   NIX_LD = "${stdenv.cc.libc_bin}/bin/ld.so";
 }

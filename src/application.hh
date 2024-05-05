@@ -1,6 +1,6 @@
 #include <gtkmm.h>
 
-#include "cw1.hh"
+#include "main.hh"
 
 class CW1::Application : public Gtk::Application {
  protected:
