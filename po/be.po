@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cw1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-05 16:21+0300\n"
+"POT-Creation-Date: 2024-05-05 17:58+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,11 +16,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/main.cc:31
+#: src/application.cc:17
 msgid "Display version information and exit"
 msgstr "Паказаць звесткі аб версіі і скончыць працу"
 
-#: src/main.cc:48
+#: src/application.cc:36
 msgid ""
 "CW1 (courcework 1) 1.0\n"
 "Copyright (C) 2024 nadevko\n"

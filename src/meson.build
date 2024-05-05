@@ -9,7 +9,7 @@ subdir('assets')
 
 executable(
     'cw1',
-    sources: ['main.cc', gresources],
+    sources: ['main.cc', 'application.cc', gresources],
     dependencies: [gtkmm, config_h],
     install: true,
 )
