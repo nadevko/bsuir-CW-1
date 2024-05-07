@@ -16,6 +16,7 @@ stdenv.mkDerivation rec {
     desktop-file-utils
     gettext
     opencv
+    libadwaita
   ];
 
   meta = with lib; {

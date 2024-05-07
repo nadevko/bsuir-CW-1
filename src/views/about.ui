@@ -2,21 +2,17 @@
 <!-- Created with Cambalache 0.16.0 -->
 <interface domain="io.github.nadevko.cw1">
   <!-- interface-name main.ui -->
+  <requires lib="libadwaita" version="1.4"/>
   <requires lib="gtk" version="4.6"/>
-  <object class="GtkAboutDialog" id="About">
-    <property name="artists">nadevko</property>
-    <property name="authors">nadevko</property>
-    <property name="comments">Image deduplication tool</property>
-    <property name="copyright">copyright (c) 2024 nadevko</property>
-    <property name="documenters">nadevko</property>
-    <property name="icon-name">cw1</property>
+  <object class="AdwAboutWindow" id="about">
+    <property name="application-icon">cw1</property>
+    <property name="application-name">Courcework1</property>
+    <property name="copyright">Copyright (C) 2024 nadevko</property>
+    <property name="developer-name">nadevko</property>
+    <property name="issue-url">https://github.com/nadevko/bsuir-CW-1/issues</property>
     <property name="license-type">gpl-3-0-only</property>
-    <property name="logo-icon-name">cw1</property>
-    <property name="modal">True</property>
-    <property name="program-name">Course Work #1</property>
+    <property name="title">Courcework1</property>
     <property name="version">1.0</property>
-    <property name="website">https://nadevko.github.io/bsuir-CW-1</property>
-    <property name="website-label">GitHub</property>
-    <property name="wrap-license">True</property>
+    <property name="website">https://github.com/nadevko/bsuir-CW-1</property>
   </object>
 </interface>

@@ -3,32 +3,79 @@
 <cambalache-project version="0.13.1" target_tk="gtk-4.0">
   <ui>
 	(1,None,"main.ui","about.ui",None,None,None,None,"io.github.nadevko.cw1",None,None),
-	(2,None,None,"application.ui",None,None,None,None,"io.github.nadevko.cw1",None,None)
+	(2,None,None,"application.ui",None,None,None,None,"io.github.nadevko.cw1",None,None),
+	(3,None,None,"preferences.ui",None,None,None,None,None,None,None)
   </ui>
+  <ui_library>
+	(1,"libadwaita","1.4",None),
+	(2,"libadwaita","1.4",None),
+	(3,"gtk","4.12",None),
+	(3,"libadwaita","1.4",None)
+  </ui_library>
   <object>
-	(1,1,"GtkAboutDialog","About",None,None,None,None,-1,None),
-	(2,1,"GtkApplicationWindow","Application",None,None,None,None,-1,None),
-	(2,2,"GtkButton",None,1,None,None,None,-1,None)
+	(1,1,"AdwAboutWindow","about",None,None,None,None,-1,None),
+	(2,1,"AdwApplicationWindow","application",None,None,None,None,-1,None),
+	(2,2,"AdwNavigationSplitView",None,1,None,None,None,-1,None),
+	(2,3,"AdwNavigationPage",None,2,None,None,None,-1,None),
+	(2,4,"AdwNavigationPage",None,2,None,None,None,-1,None),
+	(2,6,"GtkBox",None,4,None,None,None,-1,None),
+	(2,7,"AdwHeaderBar",None,6,None,None,None,None,None),
+	(2,8,"GtkGrid",None,6,None,None,None,1,None),
+	(2,9,"GtkLabel",None,8,None,None,None,None,None),
+	(2,10,"GtkBox",None,3,None,None,None,-1,None),
+	(2,11,"AdwHeaderBar",None,10,None,None,None,None,None),
+	(2,12,"GtkSearchBar",None,10,None,None,None,1,None),
+	(2,13,"AdwClamp",None,10,None,None,None,2,None),
+	(2,14,"GtkBox",None,13,None,None,None,-1,None),
+	(2,15,"AdwExpanderRow",None,14,None,None,None,None,None),
+	(2,16,"GtkBox",None,15,None,None,None,-1,None),
+	(2,17,"AdwEntryRow",None,16,None,None,None,None,None),
+	(2,18,"GtkButton",None,16,None,None,None,1,None),
+	(3,1,"AdwPreferencesWindow","preferences",None,None,None,None,-1,None),
+	(3,2,"AdwPreferencesPage",None,1,None,None,None,-1,None),
+	(3,3,"AdwPreferencesGroup",None,2,None,None,None,-1,None),
+	(3,4,"AdwComboRow","preferences_language",3,None,None,None,-1,None),
+	(3,5,"GtkStringList",None,4,None,None,None,-1,None)
   </object>
   <object_property>
-	(1,1,"GtkAboutDialog","artists","nadevko",None,None,None,None,None,None,None,None,None),
-	(1,1,"GtkAboutDialog","authors","nadevko",None,None,None,None,None,None,None,None,None),
-	(1,1,"GtkAboutDialog","comments","Image deduplication tool",None,None,None,None,None,None,None,None,None),
-	(1,1,"GtkAboutDialog","copyright","copyright (c) 2024 nadevko",None,None,None,None,None,None,None,None,None),
-	(1,1,"GtkAboutDialog","documenters","nadevko",None,None,None,None,None,None,None,None,None),
-	(1,1,"GtkAboutDialog","license-type","gpl-3-0-only",None,None,None,None,None,None,None,None,None),
-	(1,1,"GtkAboutDialog","logo-icon-name","cw1",None,None,None,None,None,None,None,None,None),
-	(1,1,"GtkAboutDialog","program-name","Course Work #1",None,None,None,None,None,None,None,None,None),
-	(1,1,"GtkAboutDialog","version","1.0",None,None,None,None,None,None,None,None,None),
-	(1,1,"GtkAboutDialog","website","https://nadevko.github.io/bsuir-CW-1",None,None,None,None,None,None,None,None,None),
-	(1,1,"GtkAboutDialog","website-label","GitHub",None,None,None,None,None,None,None,None,None),
-	(1,1,"GtkAboutDialog","wrap-license","True",None,None,None,None,None,None,None,None,None),
-	(1,1,"GtkWindow","icon-name","cw1",None,None,None,None,None,None,None,None,None),
-	(1,1,"GtkWindow","modal","True",None,None,None,None,None,None,None,None,None),
-	(2,1,"GtkWindow","icon-name","cw1",None,None,None,None,None,None,None,None,None),
-	(2,1,"GtkWindow","title","cw1",None,None,None,None,None,None,None,None,None)
+	(1,1,"AdwAboutWindow","application-icon","cw1",None,None,None,None,None,None,None,None,None),
+	(1,1,"AdwAboutWindow","application-name","Courcework1",None,None,None,None,None,None,None,None,None),
+	(1,1,"AdwAboutWindow","copyright","Copyright (C) 2024 nadevko",None,None,None,None,None,None,None,None,None),
+	(1,1,"AdwAboutWindow","developer-name","nadevko",None,None,None,None,None,None,None,None,None),
+	(1,1,"AdwAboutWindow","issue-url","https://github.com/nadevko/bsuir-CW-1/issues",None,None,None,None,None,None,None,None,None),
+	(1,1,"AdwAboutWindow","license-type","gpl-3-0-only",None,None,None,None,None,None,None,None,None),
+	(1,1,"AdwAboutWindow","version","1.0",None,None,None,None,None,None,None,None,None),
+	(1,1,"AdwAboutWindow","website","https://github.com/nadevko/bsuir-CW-1",None,None,None,None,None,None,None,None,None),
+	(1,1,"GtkWindow","title","Courcework1",None,None,None,None,None,None,None,None,None),
+	(2,2,"AdwNavigationSplitView","content",None,None,None,None,None,3,None,None,None,None),
+	(2,2,"AdwNavigationSplitView","sidebar",None,None,None,None,None,4,None,None,None,None),
+	(2,3,"AdwNavigationPage","child",None,None,None,None,None,10,None,None,None,None),
+	(2,4,"AdwNavigationPage","child",None,None,None,None,None,6,None,None,None,None),
+	(2,4,"AdwNavigationPage","title","cscscs",None,None,None,None,None,None,None,None,None),
+	(2,6,"GtkOrientable","orientation","vertical",None,None,None,None,None,None,None,None,None),
+	(2,9,"GtkLabel","label","cdscsd",None,None,None,None,None,None,None,None,None),
+	(2,10,"GtkOrientable","orientation","vertical",None,None,None,None,None,None,None,None,None),
+	(2,13,"AdwClamp","child",None,None,None,None,None,14,None,None,None,None),
+	(2,13,"GtkOrientable","orientation","vertical",None,None,None,None,None,None,None,None,None),
+	(2,14,"GtkOrientable","orientation","vertical",None,None,None,None,None,None,None,None,None),
+	(2,15,"AdwExpanderRow","subtitle","cscs",None,None,None,None,None,None,None,None,None),
+	(2,15,"AdwPreferencesRow","title","cscsdcscscsdc",None,None,None,None,None,None,None,None,None),
+	(2,15,"GtkListBoxRow","child",None,None,None,None,None,16,None,None,None,None),
+	(2,16,"GtkOrientable","orientation","vertical",None,None,None,None,None,None,None,None,None),
+	(3,3,"AdwPreferencesGroup","title","General",1,None,None,None,None,None,None,None,None),
+	(3,4,"AdwComboRow","model",None,None,None,None,None,5,None,None,None,None),
+	(3,4,"AdwPreferencesRow","title","Language",1,None,None,None,None,None,None,None,None)
   </object_property>
-  <object_signal>
-	(1,2,2,"GtkButton","clicked","echo",None,None,None,None,None)
-  </object_signal>
+  <object_layout_property>
+	(2,8,9,"GtkGridLayoutChild","column","0",None,None,None,None),
+	(2,8,9,"GtkGridLayoutChild","column-span","1",None,None,None,None),
+	(2,8,9,"GtkGridLayoutChild","row","0",None,None,None,None),
+	(2,8,9,"GtkGridLayoutChild","row-span","1",None,None,None,None)
+  </object_layout_property>
+  <object_data>
+	(3,5,"GtkStringList",1,1,None,None,None,None,None,None),
+	(3,5,"GtkStringList",2,2,"English",1,None,None,None,None),
+	(3,5,"GtkStringList",2,3,"Беларуская",1,None,None,None,None),
+	(3,5,"GtkStringList",2,4,"Русский",1,None,None,None,None)
+  </object_data>
 </cambalache-project>

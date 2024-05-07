@@ -1,1 +1,2 @@
 src/application.cc
+src/views/preferences.ui

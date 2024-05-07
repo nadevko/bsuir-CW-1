@@ -1,15 +1,12 @@
 #include "application.hh"
 
 #include <glib/gi18n.h>
+#include <gtk/gtk.h>
 
 #include <iostream>
 #include <opencv2/opencv.hpp>
-#include <vector>
 
-#include "giomm/file.h"
-#include "glibmm/refptr.h"
 #include "image.hh"
-#include "main.hh"
 
 // make new app instance
 CW1::Application::Application()
@@ -75,8 +72,8 @@ int CW1::Application::on_command_line(
 // gui session
 void CW1::Application::on_activate() {
   auto builder = Gtk::Builder::create();
-  builder->add_from_resource("/io/github/nadevko/cw1/views/about.ui");
-  auto about = builder->get_widget<Gtk::AboutDialog>("About");
-  this->add_window(*about);
-  about->set_visible();
+  builder->add_from_resource("/io/github/nadevko/cw1/views/application.ui");
+  auto window = builder->get_widget<Gtk::Window>("application");
+  this->add_window(*window);
+  window->set_visible();
 }

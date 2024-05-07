@@ -1,13 +1,81 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Created with Cambalache 0.16.0 -->
 <interface domain="io.github.nadevko.cw1">
+  <requires lib="libadwaita" version="1.4"/>
   <requires lib="gtk" version="4.6"/>
-  <object class="GtkApplicationWindow" id="Application">
-    <property name="icon-name">cw1</property>
-    <property name="title">cw1</property>
+  <object class="AdwApplicationWindow" id="application">
     <child>
-      <object class="GtkButton">
-        <signal name="clicked" handler="echo"/>
+      <object class="AdwNavigationSplitView">
+        <property name="content">
+          <object class="AdwNavigationPage">
+            <property name="child">
+              <object class="GtkBox">
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="AdwHeaderBar"/>
+                </child>
+                <child>
+                  <object class="GtkSearchBar"/>
+                </child>
+                <child>
+                  <object class="AdwClamp">
+                    <property name="child">
+                      <object class="GtkBox">
+                        <property name="orientation">vertical</property>
+                        <child>
+                          <object class="AdwExpanderRow">
+                            <property name="child">
+                              <object class="GtkBox">
+                                <property name="orientation">vertical</property>
+                                <child>
+                                  <object class="AdwEntryRow"/>
+                                </child>
+                                <child>
+                                  <object class="GtkButton"/>
+                                </child>
+                              </object>
+                            </property>
+                            <property name="subtitle">cscs</property>
+                            <property name="title">cscsdcscscsdc</property>
+                          </object>
+                        </child>
+                      </object>
+                    </property>
+                    <property name="orientation">vertical</property>
+                  </object>
+                </child>
+              </object>
+            </property>
+          </object>
+        </property>
+        <property name="sidebar">
+          <object class="AdwNavigationPage">
+            <property name="child">
+              <object class="GtkBox">
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="AdwHeaderBar"/>
+                </child>
+                <child>
+                  <object class="GtkGrid">
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label">cdscsd</property>
+                        <layout>
+                          <property name="column">0</property>
+                          <property name="column-span">1</property>
+                          <property name="row">0</property>
+                          <property name="row-span">1</property>
+                        </layout>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </property>
+            <property name="title">cscscs</property>
+          </object>
+        </property>
       </object>
     </child>
   </object>

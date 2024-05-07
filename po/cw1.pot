@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cw1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-05 17:58+0300\n"
+"POT-Creation-Date: 2024-05-07 12:52+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,15 +17,23 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/application.cc:17
+#: src/application.cc:29
 msgid "Display version information and exit"
 msgstr ""
 
-#: src/application.cc:36
+#: src/application.cc:48
 msgid ""
 "CW1 (courcework 1) 1.0\n"
 "Copyright (C) 2024 nadevko\n"
 "License GPLv3: GNU GPL version 3 <https://gnu.org/licenses/gpl.html>.\n"
 "This is free software: you are free to change and redistribute it.\n"
 "There is NO WARRANTY, to the extent permitted by law.\n"
+msgstr ""
+
+#: src/views/preferences.ui:11
+msgid "General"
+msgstr ""
+
+#: src/views/preferences.ui:23
+msgid "Language"
 msgstr ""

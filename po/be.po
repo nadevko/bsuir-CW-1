@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cw1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-05 17:58+0300\n"
+"POT-Creation-Date: 2024-05-07 12:52+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,11 +16,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/application.cc:17
+#: src/application.cc:29
 msgid "Display version information and exit"
 msgstr "Паказаць звесткі аб версіі і скончыць працу"
 
-#: src/application.cc:36
+#: src/application.cc:48
 msgid ""
 "CW1 (courcework 1) 1.0\n"
 "Copyright (C) 2024 nadevko\n"
@@ -33,3 +33,11 @@ msgstr ""
 "Ліцэнзія GPLv3: GNU GPL версіі 3 <https://gnu.org/licenses/gpl.html>.\n"
 "Гэта свабоднае ПЗ: вы вольны змяняць і пашыраць яго.\n"
 "Няма НІЯКІХ ГАРАНТЫЙ у межах дзеючага заканадаўства.\n"
+
+#: src/views/preferences.ui:11
+msgid "General"
+msgstr "Асноўнае"
+
+#: src/views/preferences.ui:23
+msgid "Language"
+msgstr "Мова"
