@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Created with Cambalache 0.90.2 -->
+<interface>
+  <requires lib="gio" version="2.0"/>
+  <requires lib="gtk" version="4.14"/>
+  <object class="GtkPopoverMenu">
+    <property name="menu-model">
+      <menu>
+        <item>
+          <attribute name="label">cscsdcsdc</attribute>
+        </item>
+        <section>
+          <attribute name="label">csdcscs</attribute>
+          <item>
+            <attribute name="label">csdcs</attribute>
+          </item>
+        </section>
+        <submenu>
+          <attribute name="label">cscs</attribute>
+          <section>
+            <attribute name="label">scsc</attribute>
+            <item>
+              <attribute name="label">csdcs</attribute>
+            </item>
+          </section>
+        </submenu>
+      </menu>
+    </property>
+  </object>
+</interface>

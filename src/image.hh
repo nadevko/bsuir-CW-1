@@ -1,22 +1,46 @@
 #include <gtkmm.h>
 
+#include <concepts>
+#include <opencv2/img_hash/img_hash_base.hpp>
 #include <opencv2/opencv.hpp>
 
-#include "giomm/file.h"
-#include "glibmm/refptr.h"
 #include "main.hh"
 
+template <class Hasher>
 class CW1::Image {
- private:
-  const int histSize[2] = {50, 60};
-  const float h_ranges[2] = {0, 180};
-  const float s_ranges[2] = {0, 56};
-  const float* ranges[2] = {h_ranges, s_ranges};
-  const int channels[2] = {0, 1};
+  static_assert(std::derived_from<Hasher, cv::img_hash::ImgHashBase> == true);
+  cv::Mat _hash;
 
  public:
   Image(Glib::RefPtr<Gio::File> file);
+  Image(std::string path);
   Glib::RefPtr<Gio::File> file;
-  cv::Mat histogram;
-  double compare(Image b) const;
+  cv::Mat hash();
+  double compare(Image image);
 };
+
+template <class Hasher>
+CW1::Image<Hasher>::Image(Glib::RefPtr<Gio::File> file) {
+  this->file = file;
+}
+
+template <class Hasher>
+CW1::Image<Hasher>::Image(std::string path) {
+  auto file = Gio::File::create_for_path(path);
+  new (this) Image(file);
+}
+
+template <class Hasher>
+cv::Mat CW1::Image<Hasher>::hash() {
+  if (!_hash.empty()) return _hash;
+  cv::Ptr<Hasher> hasher = Hasher::create();
+  auto image = cv::imread(file->get_path());
+  hasher->compute(image, _hash);
+  return _hash;
+}
+
+template <class Hasher>
+double CW1::Image<Hasher>::compare(Image b) {
+  cv::Ptr<Hasher> hasher = Hasher::create();
+  return hasher->compare(hash(), b.hash());
+}

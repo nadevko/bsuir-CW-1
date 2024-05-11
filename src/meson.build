@@ -11,7 +11,7 @@ subdir('assets')
 
 executable(
     'cw1',
-    sources: ['main.cc', 'application.cc', 'image.cc', gresources],
+    sources: ['main.cc', 'application.cc', gresources],
     dependencies: [gtkmm, libadwaita, opencv, config_h],
     install: true,
 )
