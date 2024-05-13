@@ -1,5 +1,6 @@
 #include <gtkmm.h>
 
+#include <compare>
 #include <concepts>
 #include <opencv2/img_hash/img_hash_base.hpp>
 #include <opencv2/opencv.hpp>
@@ -16,7 +17,8 @@ class CW1::Image {
   Image(std::string path);
   Glib::RefPtr<Gio::File> file;
   cv::Mat hash();
-  double compare(Image image);
+  double compare(Image& image);
+  std::strong_ordering operator<=>(const Image& b) const;
 };
 
 template <class Hasher>
@@ -40,7 +42,12 @@ cv::Mat CW1::Image<Hasher>::hash() {
 }
 
 template <class Hasher>
-double CW1::Image<Hasher>::compare(Image b) {
+double CW1::Image<Hasher>::compare(Image& b) {
   cv::Ptr<Hasher> hasher = Hasher::create();
   return hasher->compare(hash(), b.hash());
+}
+
+template <class Hasher>
+std::strong_ordering CW1::Image<Hasher>::operator<=>(const Image& b) const {
+  return this->file->get_path() <=> b.file->get_path();
 }

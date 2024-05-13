@@ -4,18 +4,9 @@
 #include <gtk/gtk.h>
 
 #include <iostream>
-#include <opencv2/img_hash/color_moment_hash.hpp>
 #include <opencv2/opencv.hpp>
 
-#include "giomm/menumodel.h"
-#include "glib-object.h"
-#include "glibconfig.h"
-#include "gtkmm/application.h"
-#include "gtkmm/button.h"
-#include "gtkmm/filedialog.h"
 #include "image.hh"
-#include "sigc++/functors/mem_fun.h"
-#include "sigc++/functors/ptr_fun.h"
 
 // make new app instance
 CW1::Application::Application()
@@ -27,6 +18,8 @@ CW1::Application::Application()
 
   // define options
   add_main_option_entry(Gtk::Application::OptionType::BOOL, "version", 'v',
+                        _("Display version information and exit"));
+  add_main_option_entry(Gtk::Application::OptionType::DOUBLE, "percentage", 'p',
                         _("Display version information and exit"));
   add_main_option_entry(Gtk::Application::OptionType::FILENAME_VECTOR,
                         G_OPTION_REMAINING);
@@ -60,10 +53,14 @@ int CW1::Application::on_command_line(
   switch (remaining.size()) {
     case 0: {
       activate();
-      return EXIT_SUCCESS;
     }
     case 1: {
-      return EXIT_FAILURE;
+      auto root = Gio::File::create_for_path(remaining[0]);
+      list = CW1::List<cv::img_hash::ColorMomentHash>(root);
+      for (auto i : list)
+        std::cout << root->get_relative_path(i.first.first.file)
+                  << " :: " << root->get_relative_path(i.first.second.file)
+                  << " : " << list.to_percent(i.second) << "\n";
     }
     default: {
       std::vector<CW1::Image<cv::img_hash::ColorMomentHash>> images;
@@ -74,9 +71,9 @@ int CW1::Application::on_command_line(
         for (auto j = images.begin(); j != i; j++)
           std::cout << i->file->get_path() << " " << j->file->get_path()
                     << " :: " << i->compare(*j) << "\n";
-      return EXIT_SUCCESS;
     }
   }
+  return EXIT_SUCCESS;
 }
 
 void CW1::Application::on_open_clicked() {
@@ -90,13 +87,13 @@ void CW1::Application::on_open_clicked() {
 }
 
 void CW1::Application::on_open_stop(Glib::RefPtr<Gio::AsyncResult>& result) {
-  Glib::RefPtr<Gio::File> file;
+  Glib::RefPtr<Gio::File> directory;
   try {
-    file = on_open_dialog->select_folder_finish(result);
+    directory = on_open_dialog->select_folder_finish(result);
   } catch (const Gtk::DialogError& err) {
     std::cerr << _("Directory not selected\n");
   }
-  root = file;
+  list.set_root(directory);
 }
 
 // gui session
