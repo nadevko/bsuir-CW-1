@@ -20,7 +20,9 @@ CW1::Application::Application()
   add_main_option_entry(Gtk::Application::OptionType::BOOL, "version", 'v',
                         _("Display version information and exit"));
   add_main_option_entry(Gtk::Application::OptionType::DOUBLE, "percentage", 'p',
-                        _("Display version information and exit"));
+                        _("Minimal simularity to remove (0-100)"));
+  add_main_option_entry(Gtk::Application::OptionType::FILENAME, "output", 'o',
+                        _("Override output script name (delete.sh)"));
   add_main_option_entry(Gtk::Application::OptionType::FILENAME_VECTOR,
                         G_OPTION_REMAINING);
 }

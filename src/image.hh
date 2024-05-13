@@ -2,6 +2,7 @@
 
 #include <compare>
 #include <concepts>
+#include <memory>
 #include <opencv2/img_hash/img_hash_base.hpp>
 #include <opencv2/opencv.hpp>
 
@@ -15,6 +16,8 @@ class CW1::Image {
  public:
   Image(Glib::RefPtr<Gio::File> file);
   Image(std::string path);
+  static CW1::iptr<Hasher> from(Glib::RefPtr<Gio::File> file);
+  static CW1::iptr<Hasher> from(std::string path);
   Glib::RefPtr<Gio::File> file;
   cv::Mat hash();
   double compare(Image& image);
@@ -30,6 +33,16 @@ template <class Hasher>
 CW1::Image<Hasher>::Image(std::string path) {
   auto file = Gio::File::create_for_path(path);
   new (this) Image(file);
+}
+
+template <class Hasher>
+CW1::iptr<Hasher> CW1::Image<Hasher>::from(Glib::RefPtr<Gio::File> file) {
+  return std::make_shared(&Image(file));
+}
+
+template <class Hasher>
+CW1::iptr<Hasher> CW1::Image<Hasher>::from(std::string path) {
+  return std::make_shared(Image(path));
 }
 
 template <class Hasher>

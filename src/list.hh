@@ -1,4 +1,5 @@
 #include <filesystem>
+#include <iostream>
 #include <utility>
 
 #include "main.hh"
@@ -9,16 +10,21 @@ class CW1::List {
   Glib::RefPtr<Gio::File> root;
   std::vector<CW1::Image<Hasher>> images;
   std::map<std::pair<CW1::Image<Hasher>, CW1::Image<Hasher>>, double> hashmap;
+  std::vector<std::string> extensions = {
+      ".bmp",  ".dib",  ".jpeg", ".jpg", ".jpe", ".jp2", ".png", ".webp",
+      ".avif", ".pbm",  ".pgm",  ".ppm", ".pxm", ".pnm", ".pfm", ".sr",
+      ".ras",  ".tiff", ".tif",  ".exr", ".hdr", ".pic"};
 
  public:
   List();
   List(Glib::RefPtr<Gio::File> root);
   void set_root(Glib::RefPtr<Gio::File> root);
   Glib::RefPtr<Gio::File> get_root();
+  double to_percent(double compare) const;
   auto begin() const;
   auto end() const;
+  std::map<CW1::Image<Hasher>, double> maxes;
   double max = 0;
-  double to_percent(double compare) const;
 };
 
 template <class Hasher>
@@ -49,10 +55,6 @@ void CW1::List<Hasher>::set_root(Glib::RefPtr<Gio::File> root) {
       default:
         auto extension =
             std::filesystem::path(child->get_path()).extension().string();
-        std::vector<std::string> extensions = {
-            ".bmp",  ".dib",  ".jpeg", ".jpg", ".jpe", ".jp2", ".png", ".webp",
-            ".avif", ".pbm",  ".pgm",  ".ppm", ".pxm", ".pnm", ".pfm", ".sr",
-            ".ras",  ".tiff", ".tif",  ".exr", ".hdr", ".pic"};
         if (CW1::contains(extensions, extension))
           images.push_back(CW1::Image<Hasher>(child));
     }
@@ -63,8 +65,15 @@ void CW1::List<Hasher>::set_root(Glib::RefPtr<Gio::File> root) {
     for (auto j = images.begin(); j != i; j++) {
       auto compare = j->compare(*i);
       if (max < compare) max = compare;
-      hashmap.emplace(std::make_pair(std::make_pair(*j, *i), compare));
+      std::cout << maxes[*i] << " : " << maxes[*j] << " ;; ";
+      maxes[*i] = compare;
+      maxes[*j] = compare;
+      std::cout << maxes[*i] << " : " << maxes[*j] << "\n";
+      hashmap[std::make_pair(*j, *i)] = compare;
     }
+  for (auto i : maxes)
+    std::cout << i.first.file->get_path() << " :: :: " << i.second << " ;; "
+              << to_percent(i.second) << "\n";
 }
 
 template <class Hasher>

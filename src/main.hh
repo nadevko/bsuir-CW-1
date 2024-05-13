@@ -6,7 +6,11 @@ class Application;
 template <class Hasher>
 class Image;
 template <class Hasher>
+using iptr = Glib::RefPtr<Image<Hasher>>;
+template <class Hasher>
 class List;
+template <class Hasher>
+using lptr = Glib::RefPtr<List<Hasher>>;
 template <class C, class T>
 inline bool contains(C container, const T& value);
 }  // namespace CW1
