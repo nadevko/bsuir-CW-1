@@ -1,5 +1,4 @@
 #include <filesystem>
-
 #include <utility>
 
 #include "main.hh"
@@ -66,11 +65,14 @@ void CW1::List<Hasher>::set_root(Glib::RefPtr<Gio::File> root) {
       if (max < compare) max = compare;
       hashmap[std::make_pair(*j, *i)] = compare;
     }
+  for (auto j : hashmap) j.second = to_percent(j.second);
   for (auto i : images)
     for (auto j : hashmap) {
       auto next = to_percent(j.second);
-      if ((i == j.first.first || i == j.first.second) && i->percentage < next)
+      if ((i == j.first.first || i == j.first.second) && i->percentage < next) {
         i->percentage = next;
+        i->max = (i == j.first.first) ? j.first.second : j.first.first;
+      }
     }
 }
 
@@ -81,12 +83,12 @@ Glib::RefPtr<Gio::File> CW1::List<Hasher>::get_root() {
 
 template <class Hasher>
 auto CW1::List<Hasher>::begin() const {
-  return this->hashmap.begin();
+  return this->images.begin();
 }
 
 template <class Hasher>
 auto CW1::List<Hasher>::end() const {
-  return this->hashmap.end();
+  return this->images.end();
 }
 
 template <class Hasher>

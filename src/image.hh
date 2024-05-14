@@ -22,7 +22,8 @@ class CW1::Image {
   double compare(Image& image);
   double compare(CW1::iptr<Hasher> image);
   cv::Mat hash();
-  double percentage = 0;
+  CW1::iptr<Hasher> max;
+  double percentage;
   std::strong_ordering operator<=>(const Image& b) const;
 };
 
