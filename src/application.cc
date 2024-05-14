@@ -7,6 +7,9 @@
 #include <opencv2/opencv.hpp>
 
 #include "image.hh"
+#include "main.hh"
+
+using Hasher = cv::img_hash::ColorMomentHash;
 
 // make new app instance
 CW1::Application::Application()
@@ -58,17 +61,17 @@ int CW1::Application::on_command_line(
     }
     case 1: {
       auto root = Gio::File::create_for_path(remaining[0]);
-      list = CW1::List<cv::img_hash::ColorMomentHash>(root);
+      list = CW1::List<Hasher>(root);
       for (auto i : list)
-        std::cout << root->get_relative_path(i.first.first.file)
-                  << " :: " << root->get_relative_path(i.first.second.file)
+        std::cout << root->get_relative_path(i.first.first->file)
+                  << " :: "
+                  << root->get_relative_path(i.first.second->file)
                   << " : " << list.to_percent(i.second) << "\n";
     }
     default: {
-      std::vector<CW1::Image<cv::img_hash::ColorMomentHash>> images;
+      std::vector<CW1::Image<Hasher>> images;
       for (auto path : remaining)
-        images.push_back(CW1::Image<cv::img_hash::ColorMomentHash>(
-            Gio::File::create_for_path(path)));
+        images.push_back(CW1::Image<Hasher>(Gio::File::create_for_path(path)));
       for (auto i = images.begin(); i != images.end(); i++)
         for (auto j = images.begin(); j != i; j++)
           std::cout << i->file->get_path() << " " << j->file->get_path()

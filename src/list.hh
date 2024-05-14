@@ -1,5 +1,5 @@
 #include <filesystem>
-#include <iostream>
+
 #include <utility>
 
 #include "main.hh"
@@ -8,8 +8,8 @@ template <class Hasher>
 class CW1::List {
  private:
   Glib::RefPtr<Gio::File> root;
-  std::vector<CW1::Image<Hasher>> images;
-  std::map<std::pair<CW1::Image<Hasher>, CW1::Image<Hasher>>, double> hashmap;
+  std::vector<CW1::iptr<Hasher>> images;
+  std::map<std::pair<CW1::iptr<Hasher>, CW1::iptr<Hasher>>, double> hashmap;
   std::vector<std::string> extensions = {
       ".bmp",  ".dib",  ".jpeg", ".jpg", ".jpe", ".jp2", ".png", ".webp",
       ".avif", ".pbm",  ".pgm",  ".ppm", ".pxm", ".pnm", ".pfm", ".sr",
@@ -23,7 +23,6 @@ class CW1::List {
   double to_percent(double compare) const;
   auto begin() const;
   auto end() const;
-  std::map<CW1::Image<Hasher>, double> maxes;
   double max = 0;
 };
 
@@ -56,24 +55,23 @@ void CW1::List<Hasher>::set_root(Glib::RefPtr<Gio::File> root) {
         auto extension =
             std::filesystem::path(child->get_path()).extension().string();
         if (CW1::contains(extensions, extension))
-          images.push_back(CW1::Image<Hasher>(child));
+          images.push_back(CW1::Image<Hasher>::from(child));
     }
   }
   hashmap = {};
   std::sort(images.begin(), images.end());
   for (auto i = images.begin(); i != images.end(); i++)
     for (auto j = images.begin(); j != i; j++) {
-      auto compare = j->compare(*i);
+      auto compare = (*j)->compare(*i);
       if (max < compare) max = compare;
-      std::cout << maxes[*i] << " : " << maxes[*j] << " ;; ";
-      maxes[*i] = compare;
-      maxes[*j] = compare;
-      std::cout << maxes[*i] << " : " << maxes[*j] << "\n";
       hashmap[std::make_pair(*j, *i)] = compare;
     }
-  for (auto i : maxes)
-    std::cout << i.first.file->get_path() << " :: :: " << i.second << " ;; "
-              << to_percent(i.second) << "\n";
+  for (auto i : images)
+    for (auto j : hashmap) {
+      auto next = to_percent(j.second);
+      if ((i == j.first.first || i == j.first.second) && i->percentage < next)
+        i->percentage = next;
+    }
 }
 
 template <class Hasher>

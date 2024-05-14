@@ -19,8 +19,10 @@ class CW1::Image {
   static CW1::iptr<Hasher> from(Glib::RefPtr<Gio::File> file);
   static CW1::iptr<Hasher> from(std::string path);
   Glib::RefPtr<Gio::File> file;
-  cv::Mat hash();
   double compare(Image& image);
+  double compare(CW1::iptr<Hasher> image);
+  cv::Mat hash();
+  double percentage = 0;
   std::strong_ordering operator<=>(const Image& b) const;
 };
 
@@ -37,12 +39,12 @@ CW1::Image<Hasher>::Image(std::string path) {
 
 template <class Hasher>
 CW1::iptr<Hasher> CW1::Image<Hasher>::from(Glib::RefPtr<Gio::File> file) {
-  return std::make_shared(&Image(file));
+  return std::make_shared<CW1::Image<Hasher>>(Image(file));
 }
 
 template <class Hasher>
 CW1::iptr<Hasher> CW1::Image<Hasher>::from(std::string path) {
-  return std::make_shared(Image(path));
+  return std::make_shared<CW1::Image<Hasher>>(Image(path));
 }
 
 template <class Hasher>
@@ -58,6 +60,12 @@ template <class Hasher>
 double CW1::Image<Hasher>::compare(Image& b) {
   cv::Ptr<Hasher> hasher = Hasher::create();
   return hasher->compare(hash(), b.hash());
+}
+
+template <class Hasher>
+double CW1::Image<Hasher>::compare(CW1::iptr<Hasher> b) {
+  cv::Ptr<Hasher> hasher = Hasher::create();
+  return hasher->compare(hash(), b->hash());
 }
 
 template <class Hasher>
