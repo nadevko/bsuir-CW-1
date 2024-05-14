@@ -22,10 +22,10 @@ CW1::Application::Application()
   // define options
   add_main_option_entry(Gtk::Application::OptionType::BOOL, "version", 'v',
                         _("Display version information and exit"));
+  add_main_option_entry(Gtk::Application::OptionType::FILENAME, "type", 't',
+                        _("Output type (none)"), "none|sh");
   add_main_option_entry(Gtk::Application::OptionType::DOUBLE, "percentage", 'p',
                         _("Minimal simularity to remove (0-100)"));
-  add_main_option_entry(Gtk::Application::OptionType::FILENAME, "output", 'o',
-                        _("Override output script name (delete.sh)"));
   add_main_option_entry(Gtk::Application::OptionType::FILENAME_VECTOR,
                         G_OPTION_REMAINING);
 }
@@ -52,6 +52,18 @@ int CW1::Application::on_command_line(
     return EXIT_SUCCESS;
   }
 
+  auto format = formats::none;
+  std::string format_str;
+  const std::map<std::string, formats> format_map = {{"none", formats::none},
+                                                     {"sh", formats::sh}};
+  options->lookup_value("type", format_str);
+  if (!format_str.empty()) try {
+      format = format_map.at(format_str);
+    } catch (std::out_of_range&) {
+      throw Glib::OptionError(Glib::OptionError::BAD_VALUE,
+                              _("Output format: none (default), sh"));
+    }
+
   std::vector<std::string> remaining;
   options->lookup_value(G_OPTION_REMAINING, remaining);
 
@@ -61,11 +73,8 @@ int CW1::Application::on_command_line(
     }
     case 1: {
       auto root = Gio::File::create_for_path(remaining[0]);
-      list = CW1::List<Hasher>(root);
-      for (auto i : list)
-        std::cout << root->get_relative_path(i->file) << " ( "
-                  << root->get_relative_path(i->max->file)
-                  << " ) : " << i->percentage << "\n";
+      list = CW1::List<Hasher>(format, root);
+      std::cout << list.to_string();
     }
     default: {
       std::vector<CW1::Image<Hasher>> images;
@@ -97,7 +106,8 @@ void CW1::Application::on_open_stop(Glib::RefPtr<Gio::AsyncResult>& result) {
   } catch (const Gtk::DialogError& err) {
     std::cerr << _("Directory not selected\n");
   }
-  list.set_root(directory);
+  auto next = CW1::List<Hasher>(directory);
+  list = next;
 }
 
 // gui session

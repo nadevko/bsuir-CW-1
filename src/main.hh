@@ -16,6 +16,8 @@ template <class Hasher>
 using iptr = Glib::RefPtr<Image<Hasher>>;
 template <class Hasher>
 using lptr = Glib::RefPtr<List<Hasher>>;
+// enums
+enum class formats { none, sh };
 }  // namespace CW1
 
 template <class C, class T>

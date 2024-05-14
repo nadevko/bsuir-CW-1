@@ -1,4 +1,6 @@
 #include <filesystem>
+#include <sstream>
+#include <string>
 #include <utility>
 
 #include "main.hh"
@@ -16,30 +18,39 @@ class CW1::List {
 
  public:
   List();
+  List(formats format);
   List(Glib::RefPtr<Gio::File> root);
-  void set_root(Glib::RefPtr<Gio::File> root);
-  Glib::RefPtr<Gio::File> get_root();
+  List(formats format, Glib::RefPtr<Gio::File> root);
   double to_percent(double compare) const;
+  std::string to_string() const;
+  std::string to_string(CW1::iptr<Hasher> image) const;
   auto begin() const;
   auto end() const;
+  formats format;
   double max = 0;
 };
 
 template <class Hasher>
 CW1::List<Hasher>::List() {
-  new (this) List(Gio::File::create_for_path(Glib::get_current_dir()));
+  new (this)
+      List(formats::none, Gio::File::create_for_path(Glib::get_current_dir()));
+}
+
+template <class Hasher>
+CW1::List<Hasher>::List(formats format) {
+  new (this) List(format, Gio::File::create_for_path(Glib::get_current_dir()));
 }
 
 template <class Hasher>
 CW1::List<Hasher>::List(Glib::RefPtr<Gio::File> root) {
-  set_root(root);
+  new (this) List(formats::none, root);
 }
 
 template <class Hasher>
-void CW1::List<Hasher>::set_root(Glib::RefPtr<Gio::File> root) {
+CW1::List<Hasher>::List(formats format, Glib::RefPtr<Gio::File> root)
+    : root(root), format(format) {
   std::stack<Glib::RefPtr<Gio::FileEnumerator>> iterators;
   iterators.push(root->enumerate_children());
-  images = {};
   while (!iterators.empty()) {
     auto info = iterators.top()->next_file();
     if (!info) {
@@ -57,7 +68,6 @@ void CW1::List<Hasher>::set_root(Glib::RefPtr<Gio::File> root) {
           images.push_back(CW1::Image<Hasher>::from(child));
     }
   }
-  hashmap = {};
   std::sort(images.begin(), images.end());
   for (auto i = images.begin(); i != images.end(); i++)
     for (auto j = images.begin(); j != i; j++) {
@@ -77,8 +87,29 @@ void CW1::List<Hasher>::set_root(Glib::RefPtr<Gio::File> root) {
 }
 
 template <class Hasher>
-Glib::RefPtr<Gio::File> CW1::List<Hasher>::get_root() {
-  return root;
+double CW1::List<Hasher>::to_percent(double compare) const {
+  return 100 - 100 * compare / this->max;
+}
+
+template <class Hasher>
+std::string CW1::List<Hasher>::to_string() const {
+  std::string result;
+  for (auto i = begin(); i != end(); i++) result += to_string(*i);
+  return result;
+}
+
+template <class Hasher>
+std::string CW1::List<Hasher>::to_string(CW1::iptr<Hasher> image) const {
+  std::stringstream ss;
+  if (format == formats::sh)
+    ss << "rm " << image->file->get_path() << " # "
+       << root->get_relative_path(image->max->file) << " " << image->percentage
+       << "%\n";
+  else
+    ss << root->get_relative_path(image->file)
+       << " :: " << root->get_relative_path(image->max->file) << " : "
+       << image->percentage << "\n";
+  return ss.str();
 }
 
 template <class Hasher>
@@ -89,9 +120,4 @@ auto CW1::List<Hasher>::begin() const {
 template <class Hasher>
 auto CW1::List<Hasher>::end() const {
   return this->images.end();
-}
-
-template <class Hasher>
-double CW1::List<Hasher>::to_percent(double compare) const {
-  return 100 - 100 * compare / this->max;
 }
