@@ -1,11 +1,12 @@
 #include "application.hh"
 
-#include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
+#include <cstdlib>
 #include <iostream>
 #include <opencv2/opencv.hpp>
 
+#include "glibmm/optioncontext.h"
 #include "image.hh"
 #include "main.hh"
 
@@ -66,9 +67,6 @@ int CW1::Application::on_command_line(
 
   double percentage = 95;
   options->lookup_value("percentage", percentage);
-  if (0 > percentage || 100 < percentage)
-    throw Glib::OptionError(Glib::OptionError::BAD_VALUE,
-                            _("Percentage: double from 0 to 100"));
 
   std::vector<std::string> remaining;
   options->lookup_value(G_OPTION_REMAINING, remaining);
@@ -80,7 +78,13 @@ int CW1::Application::on_command_line(
     case 1: {
       auto root = Gio::File::create_for_path(remaining[0]);
       list = CW1::List<Hasher>(format, root);
-      list.percentage = percentage;
+      try {
+        list.set_percentage(percentage);
+      } catch (Glib::OptionError& err) {
+        std::cerr << "[" << 2 << "] " << _("incorrect usage") << ": "
+                  << err.what() << "\n";
+        return 2;
+      }
       std::cout << list.to_string();
     }
     default: {

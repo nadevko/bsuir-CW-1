@@ -13,6 +13,7 @@ class CW1::List {
       ".avif", ".pbm",  ".pgm",  ".ppm", ".pxm", ".pnm", ".pfm", ".sr",
       ".ras",  ".tiff", ".tif",  ".exr", ".hdr", ".pic"};
   formats format;
+  double percentage = 95;
 
  public:
   List();
@@ -23,7 +24,8 @@ class CW1::List {
   std::string to_string() const;
   auto begin() const;
   auto end() const;
-  double percentage = 95;
+  void set_percentage(double& percentage);
+  double get_percentage();
   double max = 0;
 };
 
@@ -120,4 +122,17 @@ auto CW1::List<Hasher>::begin() const {
 template <class Hasher>
 auto CW1::List<Hasher>::end() const {
   return this->images.end();
+}
+
+template <class Hasher>
+void CW1::List<Hasher>::set_percentage(double& percentage) {
+  if (0 > percentage || 100 < percentage)
+    throw Glib::OptionError(Glib::OptionError::BAD_VALUE,
+                            _("percentage. double from 0 to 100"));
+  this->percentage = percentage;
+}
+
+template <class Hasher>
+double CW1::List<Hasher>::get_percentage() {
+  return percentage;
 }

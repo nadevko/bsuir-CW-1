@@ -1,5 +1,4 @@
 #include <adwaita.h>
-#include <glib/gi18n.h>
 #include <gtkmm.h>
 
 #include "application.hh"
@@ -10,13 +9,10 @@ int main(int argc, char** argv) {
   setlocale(LC_ALL, "");
   bindtextdomain(GETTEXT_PACKAGE, LOCALE_DIR);
   textdomain(GETTEXT_PACKAGE);
-
   // adwaita init
   adw_init();
-
   // application init
   static auto app = CW1::Application::create();
-
   // run applicaton
   return app->run(argc, argv);
 }

@@ -1,4 +1,5 @@
 #pragma once
+#include <glib/gi18n.h>
 #include <gtkmm.h>
 
 namespace CW1 {
