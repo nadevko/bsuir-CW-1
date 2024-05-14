@@ -1,7 +1,4 @@
 #include <filesystem>
-#include <sstream>
-#include <string>
-#include <utility>
 
 #include "main.hh"
 
@@ -15,6 +12,7 @@ class CW1::List {
       ".bmp",  ".dib",  ".jpeg", ".jpg", ".jpe", ".jp2", ".png", ".webp",
       ".avif", ".pbm",  ".pgm",  ".ppm", ".pxm", ".pnm", ".pfm", ".sr",
       ".ras",  ".tiff", ".tif",  ".exr", ".hdr", ".pic"};
+  formats format;
 
  public:
   List();
@@ -23,10 +21,9 @@ class CW1::List {
   List(formats format, Glib::RefPtr<Gio::File> root);
   double to_percent(double compare) const;
   std::string to_string() const;
-  std::string to_string(CW1::iptr<Hasher> image) const;
   auto begin() const;
   auto end() const;
-  formats format;
+  double percentage = 95;
   double max = 0;
 };
 
@@ -94,22 +91,25 @@ double CW1::List<Hasher>::to_percent(double compare) const {
 template <class Hasher>
 std::string CW1::List<Hasher>::to_string() const {
   std::string result;
-  for (auto i = begin(); i != end(); i++) result += to_string(*i);
+  std::vector<CW1::iptr<Hasher>> maxes;
+  if (format == formats::sh) result += "#!/bin/sh\n";
+  for (auto i = begin(); i != end(); i++) {
+    auto isRemove = percentage < (*i)->percentage;
+    if (isRemove && CW1::contains(maxes, *i)) isRemove = false;
+    std::stringstream ss;
+    if (format == formats::sh)
+      ss << (isRemove ? "" : "#") << "rm " << (*i)->file->get_path() << " # "
+         << root->get_relative_path((*i)->max->file) << " " << (*i)->percentage
+         << "%\n";
+    else
+      ss << (isRemove ? "DELETE " : "LEAVE ")
+         << root->get_relative_path((*i)->file)
+         << " :: " << root->get_relative_path((*i)->max->file) << " : "
+         << (*i)->percentage << "\n";
+    maxes.push_back((*i)->max);
+    result += ss.str();
+  }
   return result;
-}
-
-template <class Hasher>
-std::string CW1::List<Hasher>::to_string(CW1::iptr<Hasher> image) const {
-  std::stringstream ss;
-  if (format == formats::sh)
-    ss << "rm " << image->file->get_path() << " # "
-       << root->get_relative_path(image->max->file) << " " << image->percentage
-       << "%\n";
-  else
-    ss << root->get_relative_path(image->file)
-       << " :: " << root->get_relative_path(image->max->file) << " : "
-       << image->percentage << "\n";
-  return ss.str();
 }
 
 template <class Hasher>

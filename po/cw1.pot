@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cw1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-13 20:08+0300\n"
+"POT-Creation-Date: 2024-05-14 10:18+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,19 +17,19 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/application.cc:21
+#: src/application.cc:24
 msgid "Display version information and exit"
 msgstr ""
 
-#: src/application.cc:23
-msgid "Minimal simularity to remove (0-100)"
+#: src/application.cc:26
+msgid "Output type (none)"
 msgstr ""
 
-#: src/application.cc:25
-msgid "Override output script name (delete.sh)"
+#: src/application.cc:28
+msgid "Minimal simularity to remove (95)"
 msgstr ""
 
-#: src/application.cc:44
+#: src/application.cc:47
 msgid ""
 "CW1 (courcework 1) 1.0\n"
 "Copyright (C) 2024 nadevko\n"
@@ -38,7 +38,15 @@ msgid ""
 "There is NO WARRANTY, to the extent permitted by law.\n"
 msgstr ""
 
-#: src/application.cc:96
+#: src/application.cc:64
+msgid "Output types: none, sh"
+msgstr ""
+
+#: src/application.cc:71
+msgid "Percentage: double from 0 to 100"
+msgstr ""
+
+#: src/application.cc:114
 msgid "Directory not selected\n"
 msgstr ""
 

@@ -25,7 +25,7 @@ CW1::Application::Application()
   add_main_option_entry(Gtk::Application::OptionType::FILENAME, "type", 't',
                         _("Output type (none)"), "none|sh");
   add_main_option_entry(Gtk::Application::OptionType::DOUBLE, "percentage", 'p',
-                        _("Minimal simularity to remove (0-100)"));
+                        _("Minimal simularity to remove (95)"), "1-100");
   add_main_option_entry(Gtk::Application::OptionType::FILENAME_VECTOR,
                         G_OPTION_REMAINING);
 }
@@ -61,8 +61,14 @@ int CW1::Application::on_command_line(
       format = format_map.at(format_str);
     } catch (std::out_of_range&) {
       throw Glib::OptionError(Glib::OptionError::BAD_VALUE,
-                              _("Output format: none (default), sh"));
+                              _("Output types: none, sh"));
     }
+
+  double percentage = 95;
+  options->lookup_value("percentage", percentage);
+  if (0 > percentage || 100 < percentage)
+    throw Glib::OptionError(Glib::OptionError::BAD_VALUE,
+                            _("Percentage: double from 0 to 100"));
 
   std::vector<std::string> remaining;
   options->lookup_value(G_OPTION_REMAINING, remaining);
@@ -74,6 +80,7 @@ int CW1::Application::on_command_line(
     case 1: {
       auto root = Gio::File::create_for_path(remaining[0]);
       list = CW1::List<Hasher>(format, root);
+      list.percentage = percentage;
       std::cout << list.to_string();
     }
     default: {
