@@ -1,6 +1,5 @@
 with import <nixpkgs> { };
-mkShell rec {
-  stdenv = gccStdenv;
+(mkShell.override { stdenv = pkgs.clangStdenv; }) rec {
   nativeBuildInputs = [
     meson
     ninja
@@ -9,7 +8,8 @@ mkShell rec {
     desktop-file-utils
     plantuml
     cambalache
-    # (import ./. { inherit pkgs; })
+    (callPackage
+      "${fetchGit "https://github.com/bkryza/clang-uml"}/packaging/nix" { })
   ];
   buildInputs = [ gtkmm4.dev libadwaita gettext opencv ];
   NIX_LD_LIBRARY_PATH = lib.makeLibraryPath ([ stdenv.cc.cc ] ++ buildInputs);

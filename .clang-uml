@@ -1,0 +1,7 @@
+compilation_database_dir: builddir
+output_directory: doc/build
+diagrams:
+  classes:
+    type: class
+    include:
+      paths: [ src ]

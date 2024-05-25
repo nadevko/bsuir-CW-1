@@ -6,3 +6,4 @@ indent.log
 /.vscode/
 /result
 /tex
+*.puml
