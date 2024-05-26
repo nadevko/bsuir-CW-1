@@ -11,6 +11,8 @@
 \titleleft{Бородин А.Н.\\Кабариха В.А.}
 \titlepageyear{2024}
 
+\graphicspath{{./assets/}}
+
 \begin{document}
 
 \maketitle
@@ -257,8 +259,8 @@
 Параметры перцептивного хеша:
 
 \begin{itemize}
-    \item Алгоритм масштабирования изображения: ланцош3, ближайший сосед,
-          треугольный, гауссовский, катмалл"=ром;
+    \item Алгоритм масштабирования изображения: Lanczos3, ближайший сосед,
+          треугольный, гауссовский, алгоритм Катмалла"=Рома;
     \item Размер хеша: 8, 16, 32, 64;
     \item Тип хеша: одинарный, вертикальный, двойной градиентный, блочный,
           средний.
@@ -334,8 +336,15 @@
 % решения.
 
 \subsection{Масштабирование изображения}
+Сравнения изображений посредством перцептивного хеширования можно разделить на
+три этапа: масштабирование изображений, вычисление хешей и их сравнение. Для
+масштабирования изображения выбран алгоритм билинейной интерполяции, так как он
+прост и эффективен. Он работает следующим образом: для каждого пикселя в новом
+изображении находится ближайший пиксель в исходном изображении, а затем
+вычисляется среднее значение цвета пикселей вокруг него. Этот метод обеспечивает
+хорошее качество изображения при увеличении или уменьшении его размера.
 
-\subsection{Перцептивное хеширование}
+\subsection{Вычисление хеша}
 Перцептивное хеширование -- трехэтапный процесс
 
 \subsection{Сравнение хешей}
@@ -580,10 +589,11 @@
 
 \chapter[справочное]{Код файлов конфигурации}
 
-\makelisting{../src/views/preferences.ui}[src/views/preferences.ui]
-\makelisting{../src/views/preferences.ui}[src/views/preferences.ui]
-\makelisting{../src/views/preferences.ui}[src/views/preferences.ui]
-\makelisting{../src/views/preferences.ui}[src/views/preferences.ui]
+\makelisting{../meson_options.txt}[meson\_options.txt]
+\makelisting{../meson.build}[meson.build]
+\makelisting{../po/meson.build}[po/meson.build]
+\makelisting{../src/assets/meson.build}[src/assets/meson.build]
+\makelisting{../src/meson.build}[src/meson.build]
 
 % \makeappendix{справочное}{Функция перцептивного хеша}{}
 

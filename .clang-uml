@@ -1,5 +1,5 @@
 compilation_database_dir: builddir
-output_directory: doc/build
+output_directory: doc/includes
 diagrams:
   classes:
     type: class
