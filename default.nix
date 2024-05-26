@@ -1,6 +1,6 @@
 { pkgs ? import <nixpkgs> { } }:
 with pkgs;
-clangStdenv.mkDerivation rec {
+stdenv.mkDerivation rec {
   pname = "cw1";
   version = "1.0";
 
