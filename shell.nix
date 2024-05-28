@@ -5,6 +5,7 @@ mkShell rec {
     ninja
     pkg-config
     cmake-format
+    clang-tools
     desktop-file-utils
     plantuml
     cambalache
