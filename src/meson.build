@@ -7,11 +7,14 @@ gresources = gnome.compile_resources(
     'gresources.xml',
 )
 
+cw1_deps = [gtkmm, libadwaita, opencv, config_h]
+
 subdir('assets')
+subdir('tests')
 
 executable(
     'cw1',
-    sources: ['main.cc', 'application.cc', gresources],
-    dependencies: [gtkmm, libadwaita, opencv, config_h],
+    sources: ['main.cc', gresources],
+    dependencies: cw1_deps,
     install: true,
 )
