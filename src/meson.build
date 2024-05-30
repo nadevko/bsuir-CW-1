@@ -7,9 +7,10 @@ gresources = gnome.compile_resources(
 )
 
 cw1_sources = [
-    gresources,
+    'application.cc',
     'main.cc',
     'rvhash.cc',
+    gresources,
 ]
 
 cw1_deps = [gtkmm, libadwaita, config_h]
