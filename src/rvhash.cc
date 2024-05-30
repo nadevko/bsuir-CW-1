@@ -7,17 +7,9 @@ namespace CW1 {
 
 RVHash::RVHash() {}
 
-void RVHash::set_bins(int bins) { this->bins = bins; }
-void RVHash::set_sectors(int sectors) { this->sectors = sectors; }
-void RVHash::set_sigma(float sigma) { this->sigma = sigma; }
-void RVHash::set_stdDeviationThreshold(float stdDeviationThreshold) {
-  this->stdDeviationThreshold = stdDeviationThreshold;
-}
-void RVHash::set_medianThreshold(float medianThreshold) {
-  this->medianThreshold = medianThreshold;
-}
-
 uint64_t RVHash::compute(const buffer& pixbuf) const {
+  // Уменьшение размера изображения
+  auto resized = get_scaled(pixbuf, size);
   // Преобразование в оттенки серого
   auto gray = get_grayscale(pixbuf);
   // Применение размытия Гаусса
@@ -54,6 +46,56 @@ double RVHash::compare(const uint64_t& lhs, const uint64_t& rhs) const {
                                  numOnesRHS * (sectors - numOnesRHS));
 
   return numerator / denominator;
+}
+
+void RVHash::set_size(size_t size) { this->size = size; }
+void RVHash::set_bins(size_t bins) { this->bins = bins; }
+void RVHash::set_sectors(size_t sectors) { this->sectors = sectors; }
+void RVHash::set_sigma(float sigma) { this->sigma = sigma; }
+void RVHash::set_stdDeviationThreshold(float stdDeviationThreshold) {
+  this->stdDeviationThreshold = stdDeviationThreshold;
+}
+void RVHash::set_medianThreshold(float medianThreshold) {
+  this->medianThreshold = medianThreshold;
+}
+
+RVHash::buffer RVHash::get_scaled(const buffer& pixbuf, int newsize) const {
+  // Получаем размеры исходного изображения
+  int width = pixbuf->get_width();
+  int height = pixbuf->get_height();
+
+  // Создаем новый буфер для масштабированного изображения
+  buffer scaled =
+      Gdk::Pixbuf::create(Gdk::Colorspace::RGB, true, 8, size, size);
+
+  // Вычисляем коэффициенты масштабирования по осям X и Y
+  float scaleX = static_cast<float>(width) / size;
+  float scaleY = static_cast<float>(height) / size;
+
+  // Проходим по каждому пикселю нового изображения
+  for (int y = 0; y < size; y++)
+    for (int x = 0; x < size; x++) {
+      // Находим соответствующий пиксель в исходном изображении с учетом
+      // масштабирования
+      int srcX = static_cast<int>(x * scaleX);
+      int srcY = static_cast<int>(y * scaleY);
+
+      // Получаем значение цвета пикселя из исходного изображения
+      guint8* srcPixel =
+          pixbuf->get_pixels() + srcY * pixbuf->get_rowstride() + srcX * 3;
+
+      // Устанавливаем значение цвета пикселя в новом изображении
+      guint8* destPixel =
+          scaled->get_pixels() + y * scaled->get_rowstride() + x * 3;
+      // Компонента Red
+      destPixel[0] = srcPixel[0];
+      // Компонента Green
+      destPixel[1] = srcPixel[1];
+      // Компонента Blue
+      destPixel[2] = srcPixel[2];
+    }
+
+  return scaled;
 }
 
 RVHash::buffer RVHash::get_grayscale(const buffer& color) const {

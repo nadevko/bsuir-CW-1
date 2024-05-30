@@ -23,12 +23,14 @@ int main(int argc, char* argv[]) {
                                                          : images.back().size();
   }
 
+  auto hash0 = CW1::RVHash().compute(Gdk::Pixbuf::create_from_file(images[0]));
+
   for (const auto& path : images) try {
       auto pixbuf = Gdk::Pixbuf::create_from_file(path);
       CW1::RVHash rvhash;
       auto hash = rvhash.compute(pixbuf);
       std::cout << std::setw(maxPathLength) << std::left << path << " | "
-                << hash << '\n';
+                << hash << " | " << rvhash.compare(hash0, hash) << '\n';
     } catch (const Glib::FileError& ex) {
       std::cerr << "Error loading image " << path << ": " << ex.what() << '\n';
     }

@@ -10,9 +10,10 @@ class RVHash {
   using sector = std::vector<char>;
   using stats = std::vector<float>;
   using kernel = std::vector<std::vector<float>>;
-  
-  int bins = 30;
-  int sectors = 180;
+
+  size_t size = 32;
+  size_t bins = 30;
+  size_t sectors = 180;
   float sigma = 1.0;
   float stdDeviationThreshold = 10.0;
   float medianThreshold = 10.0;
@@ -23,13 +24,15 @@ class RVHash {
   uint64_t compute(const buffer& pixbuf) const;
   double compare(const uint64_t& lhs, const uint64_t& rhs) const;
 
-  void set_bins(int bins);
-  void set_sectors(int sectors);
+  void set_size(size_t size);
+  void set_bins(size_t bins);
+  void set_sectors(size_t sectors);
   void set_sigma(float sigma);
   void set_stdDeviationThreshold(float stdDeviationThreshold);
   void set_medianThreshold(float medianThreshold);
 
  private:
+  buffer get_scaled(const buffer& pixbuf, int newsize) const;
   buffer get_grayscale(const buffer& pixbuf) const;
   std::vector<sector> get_sectors(const buffer& pixbuf) const;
   void get_sector_stats(const std::vector<sector>& sectors, stats& medians,
