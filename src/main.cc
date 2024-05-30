@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-#include "image.hh"
+#include "rvhash.hh"
 
 int main(int argc, char* argv[]) {
   auto app = Gtk::Application::create();
@@ -23,17 +23,15 @@ int main(int argc, char* argv[]) {
                                                          : images.back().size();
   }
 
-  for (const auto& path : images) {
-    try {
+  for (const auto& path : images) try {
       auto pixbuf = Gdk::Pixbuf::create_from_file(path);
-      CW1::Image image(pixbuf);
-      uint64_t hash = image.get_rvhash();
+      CW1::RVHash rvhash;
+      auto hash = rvhash.compute(pixbuf);
       std::cout << std::setw(maxPathLength) << std::left << path << " | "
                 << hash << '\n';
     } catch (const Glib::FileError& ex) {
       std::cerr << "Error loading image " << path << ": " << ex.what() << '\n';
     }
-  }
 
   return 0;
 }
