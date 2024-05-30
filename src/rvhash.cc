@@ -31,6 +31,31 @@ uint64_t RVHash::compute(const buffer& pixbuf) const {
   return compute(medians, stddeviation);
 }
 
+double RVHash::compare(const uint64_t& lhs, const uint64_t& rhs) const {
+  // Извлекаем биты хеша для каждого сектора
+  std::vector<bool> lhsBits, rhsBits;
+  for (int i = 0; i < sectors; ++i) {
+    lhsBits.push_back(lhs & (1ULL << i));
+    rhsBits.push_back(rhs & (1ULL << i));
+  }
+
+  // Вычисляем количество единиц в каждом хеше
+  int numOnesLHS = std::accumulate(lhsBits.begin(), lhsBits.end(), 0);
+  int numOnesRHS = std::accumulate(rhsBits.begin(), rhsBits.end(), 0);
+
+  // Вычисляем количество совпадающих единиц
+  int numMatches = 0;
+  for (int i = 0; i < sectors; ++i)
+    if (lhsBits[i] && rhsBits[i]) numMatches++;
+
+  // Вычисляем пиковый коэффициент корреляции
+  double numerator = numMatches * sectors - numOnesLHS * numOnesRHS;
+  double denominator = std::sqrt(numOnesLHS * (sectors - numOnesLHS) *
+                                 numOnesRHS * (sectors - numOnesRHS));
+
+  return numerator / denominator;
+}
+
 RVHash::buffer RVHash::get_grayscale(const buffer& color) const {
   // Получаем размеры изображения
   auto width = color->get_width();
@@ -124,7 +149,7 @@ float RVHash::get_stddeviation(const sector& sector) const {
   auto squaresSum =
       std::inner_product(sector.begin(), sector.end(), sector.begin(), 0.0f);
   // Вычисляем стандартное отклонение
-  return sqrt(squaresSum / sector.size() - pow(mean, 2));
+  return std::sqrt(squaresSum / sector.size() - std::pow(mean, 2));
 }
 
 uint64_t RVHash::compute(const stats& medians,

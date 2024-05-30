@@ -10,6 +10,7 @@ class RVHash {
   using sector = std::vector<char>;
   using stats = std::vector<float>;
   using kernel = std::vector<std::vector<float>>;
+  
   int bins = 30;
   int sectors = 180;
   float sigma = 1.0;
@@ -20,6 +21,8 @@ class RVHash {
   RVHash();
 
   uint64_t compute(const buffer& pixbuf) const;
+  double compare(const uint64_t& lhs, const uint64_t& rhs) const;
+
   void set_bins(int bins);
   void set_sectors(int sectors);
   void set_sigma(float sigma);
