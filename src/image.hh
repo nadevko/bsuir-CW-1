@@ -1,13 +1,12 @@
 #pragma once
 
-#include <gtkmm.h>
+#include <gdkmm/pixbuf.h>
+#include <gtkmm/image.h>
 
-#include <opencv2/opencv.hpp>
 #include <vector>
 
-#include "opencv2/core/mat.hpp"
-
 namespace CW1 {
+
 class Image : public Gtk::Image {
  public:
   Image(const Glib::RefPtr<Gdk::Pixbuf>& pixbuf);
@@ -17,33 +16,28 @@ class Image : public Gtk::Image {
                       float stdDevThreshold = 10.0f) const;
 
  private:
-  Glib::RefPtr<Gdk::Pixbuf> m_pixbuf;
-
-  cv::Mat convertPixbufToMat() const;
-
-  cv::Mat convertToGrayscale(const cv::Mat& image) const;
-
-  cv::Mat gaussianBlur(const cv::Mat& image, float sigma) const;
-
-  cv::Mat createGaussianKernel(int kernelSize, float sigma) const;
-
-  cv::Mat filter(const cv::Mat& image, const cv::Mat& kernel) const;
-
-  std::vector<std::vector<uchar>> divideImageIntoSectors(
-      const cv::Mat& grayImage, int numSectors) const;
-
+  Glib::RefPtr<Gdk::Pixbuf> convertToGrayscale(
+      const Glib::RefPtr<Gdk::Pixbuf>& pixbuf) const;
+  std::vector<std::vector<char>> divideImageIntoSectors(
+      const Glib::RefPtr<Gdk::Pixbuf>& pixbuf, int numSectors) const;
   void calculateSectorStatistics(
-      const std::vector<std::vector<uchar>>& sectorPixels,
+      const std::vector<std::vector<char>>& sectorPixels,
       std::vector<float>& sectorMedians,
       std::vector<float>& sectorStdDevs) const;
-
-  float calculateMedian(const std::vector<uchar>& values) const;
-
-  float calculateStandardDeviation(const std::vector<uchar>& values) const;
-
+  float calculateMedian(const std::vector<char>& values) const;
+  float calculateStandardDeviation(const std::vector<char>& values) const;
   uint64_t computeRVHash(const std::vector<float>& sectorMedians,
                          const std::vector<float>& sectorStdDevs,
                          int numSectors, float medianThreshold,
                          float stdDevThreshold) const;
+  Glib::RefPtr<Gdk::Pixbuf> gaussianBlur(
+      const Glib::RefPtr<Gdk::Pixbuf>& pixbuf, float sigma) const;
+  std::vector<std::vector<float>> createGaussianKernel(int size,
+                                                       float sigma) const;
+  Glib::RefPtr<Gdk::Pixbuf> filter(
+      const Glib::RefPtr<Gdk::Pixbuf>& image,
+      const std::vector<std::vector<float>>& kernel) const;
+  Glib::RefPtr<Gdk::Pixbuf> m_pixbuf;
 };
+
 }  // namespace CW1

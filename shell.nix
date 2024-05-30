@@ -12,7 +12,7 @@ mkShell rec {
     (callPackage
       "${fetchGit "https://github.com/bkryza/clang-uml"}/packaging/nix" { })
   ];
-  buildInputs = [ gtkmm4.dev libadwaita gettext opencv ];
+  buildInputs = [ gtkmm4.dev libadwaita gettext ];
   NIX_LD_LIBRARY_PATH = lib.makeLibraryPath ([ stdenv.cc.cc ] ++ buildInputs);
   NIX_LD = "${stdenv.cc.libc_bin}/bin/ld.so";
 }

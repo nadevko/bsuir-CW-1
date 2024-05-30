@@ -15,7 +15,6 @@ stdenv.mkDerivation rec {
     wrapGAppsHook4
     desktop-file-utils
     gettext
-    opencv
     libadwaita
   ];
 

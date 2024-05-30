@@ -19,8 +19,8 @@ int main(int argc, char* argv[]) {
   std::vector<std::string> images;
   for (int i = 1; i < argc; ++i) {
     images.push_back(argv[i]);
-    maxPathLength =
-        maxPathLength >= images.back().size() ?: images.back().size();
+    maxPathLength = maxPathLength > images.back().size() ? maxPathLength
+                                                         : images.back().size();
   }
 
   for (const auto& path : images) {

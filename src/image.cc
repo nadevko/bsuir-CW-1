@@ -1,8 +1,9 @@
 #include "image.hh"
 
+#include <gdkmm/pixbuf.h>
+
 #include <cmath>
 #include <numeric>
-#include <opencv2/imgproc/imgproc.hpp>
 
 namespace CW1 {
 
@@ -11,18 +12,15 @@ Image::Image(const Glib::RefPtr<Gdk::Pixbuf>& pixbuf)
 
 uint64_t Image::get_rvhash(int numBins, int numSectors, float sigma,
                            float medianThreshold, float stdDevThreshold) const {
-  // Преобразование Gdk::Pixbuf в cv::Mat
-  cv::Mat image = convertPixbufToMat();
-
-  // Преобразование изображения в оттенки серого
-  cv::Mat grayImage = convertToGrayscale(image);
+  // Преобразование Gdk::Pixbuf в оттенки серого
+  Glib::RefPtr<Gdk::Pixbuf> grayPixbuf = convertToGrayscale(m_pixbuf);
 
   // Применение размытия Гаусса
-  cv::Mat blurredImage = gaussianBlur(grayImage, sigma);
+  Glib::RefPtr<Gdk::Pixbuf> blurredPixbuf = gaussianBlur(grayPixbuf, sigma);
 
   // Разделение изображения на сектора
-  std::vector<std::vector<uchar>> sectorPixels =
-      divideImageIntoSectors(blurredImage, numSectors);
+  std::vector<std::vector<char>> sectorPixels =
+      divideImageIntoSectors(blurredPixbuf, numSectors);
 
   // Вычисление статистик для каждого сектора
   std::vector<float> sectorMedians, sectorStdDevs;
@@ -33,54 +31,55 @@ uint64_t Image::get_rvhash(int numBins, int numSectors, float sigma,
                        medianThreshold, stdDevThreshold);
 }
 
-cv::Mat Image::convertPixbufToMat() const {
-  const guint8* pixels = m_pixbuf->get_pixels();
-  int width = m_pixbuf->get_width();
-  int height = m_pixbuf->get_height();
-  int rowstride = m_pixbuf->get_rowstride();
+Glib::RefPtr<Gdk::Pixbuf> Image::convertToGrayscale(
+    const Glib::RefPtr<Gdk::Pixbuf>& pixbuf) const {
+  // Получаем размеры изображения
+  int width = pixbuf->get_width();
+  int height = pixbuf->get_height();
 
-  cv::Mat mat(height, width, CV_8UC3);
+  // Создаем новый Pixbuf с одним каналом
+  Glib::RefPtr<Gdk::Pixbuf> grayPixbuf =
+      Gdk::Pixbuf::create(Gdk::Colorspace::RGB, true, 8, width, height);
 
-  int channels = 3;
+  // Получаем указатель на пиксели исходного изображения
+  const guint8* srcPixels = pixbuf->get_pixels();
+  int srcRowstride = pixbuf->get_rowstride();
+
+  // Получаем указатель на пиксели нового изображения
+  guint8* destPixels = grayPixbuf->get_pixels();
+  int destRowstride = grayPixbuf->get_rowstride();
+
+  // Преобразовываем пиксели в оттенки серого
   for (int y = 0; y < height; ++y) {
     for (int x = 0; x < width; ++x) {
-      for (int c = 0; c < channels; ++c) {
-        mat.at<cv::Vec3b>(y, x)[c] = pixels[y * rowstride + x * channels + c];
-      }
+      // Получаем индекс текущего пикселя в массиве
+      int srcIndex = y * srcRowstride + x * 3;
+      // Вычисляем яркость и присваиваем её всем каналам в новом пикселе
+      guint8 gray = static_cast<guint8>((srcPixels[srcIndex] * 0.3) +
+                                        (srcPixels[srcIndex + 1] * 0.59) +
+                                        (srcPixels[srcIndex + 2] * 0.11));
+      // Устанавливаем значения пикселя в новом изображении
+      destPixels[y * destRowstride + x] = gray;
     }
   }
 
-  return mat;
+  return grayPixbuf;
 }
 
-cv::Mat Image::convertToGrayscale(const cv::Mat& image) const {
-  cv::Mat grayImage(image.rows, image.cols, CV_8UC1);
+std::vector<std::vector<char>> Image::divideImageIntoSectors(
+    const Glib::RefPtr<Gdk::Pixbuf>& pixbuf, int numSectors) const {
+  int width = pixbuf->get_width();
+  int height = pixbuf->get_height();
+  std::vector<std::vector<char>> sectorPixels(numSectors);
 
-  for (int i = 0; i < image.rows; ++i) {
-    for (int j = 0; j < image.cols; ++j) {
-      uchar blue = image.at<cv::Vec3b>(i, j)[0];
-      uchar green = image.at<cv::Vec3b>(i, j)[1];
-      uchar red = image.at<cv::Vec3b>(i, j)[2];
-      uchar gray = static_cast<uchar>((red + green + blue) / 3);
-      grayImage.at<uchar>(i, j) = gray;
-    }
-  }
-
-  return grayImage;
-}
-
-std::vector<std::vector<uchar>> Image::divideImageIntoSectors(
-    const cv::Mat& grayImage, int numSectors) const {
-  cv::Point center(grayImage.cols / 2, grayImage.rows / 2);
-  float sectorAngle = 360.0f / numSectors;
-  std::vector<std::vector<uchar>> sectorPixels(numSectors);
-
-  for (int i = 0; i < grayImage.rows; ++i) {
-    for (int j = 0; j < grayImage.cols; ++j) {
-      float angle = atan2(i - center.y, j - center.x) * 180.0f / CV_PI;
+  for (int y = 0; y < height; ++y) {
+    for (int x = 0; x < width; ++x) {
+      float angle = atan2(y - height / 2, x - width / 2) * 180.0f / M_PI;
       if (angle < 0) angle += 360.0f;
-      int sectorIdx = static_cast<int>(angle / sectorAngle);
-      sectorPixels[sectorIdx].push_back(grayImage.at<uchar>(i, j));
+      int sectorIdx = static_cast<int>(angle / (360.0f / numSectors));
+      const guint8* pixel =
+          pixbuf->get_pixels() + y * pixbuf->get_rowstride() + x;
+      sectorPixels[sectorIdx].push_back(*pixel);
     }
   }
 
@@ -88,7 +87,7 @@ std::vector<std::vector<uchar>> Image::divideImageIntoSectors(
 }
 
 void Image::calculateSectorStatistics(
-    const std::vector<std::vector<uchar>>& sectorPixels,
+    const std::vector<std::vector<char>>& sectorPixels,
     std::vector<float>& sectorMedians,
     std::vector<float>& sectorStdDevs) const {
   for (const auto& pixels : sectorPixels) {
@@ -104,8 +103,8 @@ void Image::calculateSectorStatistics(
   }
 }
 
-float Image::calculateMedian(const std::vector<uchar>& values) const {
-  std::vector<uchar> sortedValues = values;
+float Image::calculateMedian(const std::vector<char>& values) const {
+  std::vector<char> sortedValues = values;
   std::sort(sortedValues.begin(), sortedValues.end());
   int mid = sortedValues.size() / 2;
   return (sortedValues.size() % 2 == 0)
@@ -113,8 +112,7 @@ float Image::calculateMedian(const std::vector<uchar>& values) const {
              : sortedValues[mid];
 }
 
-float Image::calculateStandardDeviation(
-    const std::vector<uchar>& values) const {
+float Image::calculateStandardDeviation(const std::vector<char>& values) const {
   float mean =
       std::accumulate(values.begin(), values.end(), 0.0f) / values.size();
   float sqSum =
@@ -139,57 +137,130 @@ uint64_t Image::computeRVHash(const std::vector<float>& sectorMedians,
   return hash;
 }
 
-cv::Mat Image::gaussianBlur(const cv::Mat& image, float sigma) const {
-  int size = std::ceil(6 * sigma) + 1;
-  if (size % 2 == 0) size++;
+Glib::RefPtr<Gdk::Pixbuf> Image::gaussianBlur(
+    const Glib::RefPtr<Gdk::Pixbuf>& pixbuf, float sigma) const {
+  // Получаем размеры изображения
+  int width = pixbuf->get_width();
+  int height = pixbuf->get_height();
+  int channels = pixbuf->get_n_channels();
 
-  cv::Mat kernel = createGaussianKernel(size, sigma);
-  cv::Mat blurred = filter(image, kernel);
+  // Создаем новый Pixbuf для размытого изображения
+  Glib::RefPtr<Gdk::Pixbuf> blurredPixbuf =
+      Gdk::Pixbuf::create(Gdk::Colorspace::RGB, true, 8, width, height);
 
-  return blurred;
+  // Создаем ядро Гаусса
+  int kernelSize = std::ceil(6 * sigma) + 1;
+  if (kernelSize % 2 == 0) kernelSize++;
+  std::vector<std::vector<float>> kernel(kernelSize,
+                                         std::vector<float>(kernelSize));
+
+  float sigma2 = sigma * sigma;
+  float mean = kernelSize / 2;  // NOLINT
+
+  // Заполняем ядро Гаусса
+  for (int i = 0; i < kernelSize; ++i) {
+    for (int j = 0; j < kernelSize; ++j) {
+      float x = i - mean;
+      float y = j - mean;
+      float exponent = -(x * x + y * y) / (2 * sigma2);
+      kernel[i][j] = std::exp(exponent) / (2 * M_PI * sigma2);
+    }
+  }
+
+  // Применяем размытие Гаусса
+  for (int y = 0; y < height; ++y) {
+    for (int x = 0; x < width; ++x) {
+      std::vector<float> pixelValue(channels, 0.0f);
+      float totalWeight = 0.0f;
+      for (int ky = 0; ky < kernelSize; ++ky) {
+        for (int kx = 0; kx < kernelSize; ++kx) {
+          int imgX = std::max(0, std::min(width - 1, x - kernelSize / 2 + kx));
+          int imgY = std::max(0, std::min(height - 1, y - kernelSize / 2 + ky));
+          const guint8* srcPixel = pixbuf->get_pixels() +
+                                   imgY * pixbuf->get_rowstride() +
+                                   imgX * channels;
+          float weight = kernel[ky][kx];
+          for (int c = 0; c < channels; ++c) {
+            pixelValue[c] += srcPixel[c] * weight;
+          }
+          totalWeight += weight;
+        }
+      }
+      guint8* destPixel = blurredPixbuf->get_pixels() +
+                          y * blurredPixbuf->get_rowstride() + x * channels;
+      for (int c = 0; c < channels; ++c) {
+        destPixel[c] = static_cast<guint8>(pixelValue[c] / totalWeight);
+      }
+    }
+  }
+
+  return blurredPixbuf;
 }
 
-cv::Mat Image::createGaussianKernel(int size, float sigma) const {
-  cv::Mat kernel(size, size, CV_32F);
+std::vector<std::vector<float>> Image::createGaussianKernel(int size,
+                                                            float sigma) const {
+  // Создаем пустое ядро Гаусса
+  std::vector<std::vector<float>> kernel(size, std::vector<float>(size));
+
   float sigma2 = sigma * sigma;
   float mean = size / 2;  // NOLINT
 
+  // Заполняем ядро Гаусса
   for (int i = 0; i < size; ++i) {
     for (int j = 0; j < size; ++j) {
       float x = i - mean;
       float y = j - mean;
       float exponent = -(x * x + y * y) / (2 * sigma2);
-      kernel.at<float>(i, j) = std::exp(exponent) / (2 * CV_PI * sigma2);
+      kernel[i][j] = std::exp(exponent) / (2 * M_PI * sigma2);
     }
   }
 
   return kernel;
 }
 
-cv::Mat Image::filter(const cv::Mat& image, const cv::Mat& kernel) const {
-  cv::Mat result(image.rows, image.cols, CV_32F, cv::Scalar(0));
+Glib::RefPtr<Gdk::Pixbuf> Image::filter(
+    const Glib::RefPtr<Gdk::Pixbuf>& image,
+    const std::vector<std::vector<float>>& kernel) const {
+  // Получаем размеры изображения
+  int width = image->get_width();
+  int height = image->get_height();
+  int channels = image->get_n_channels();
 
-  int kRows = kernel.rows;
-  int kCols = kernel.cols;
-  int kCenterX = kCols / 2;
-  int kCenterY = kRows / 2;
+  // Создаем новый Pixbuf для результата фильтрации
+  Glib::RefPtr<Gdk::Pixbuf> resultPixbuf =
+      Gdk::Pixbuf::create(Gdk::Colorspace::RGB, true, 8, width, height);
 
-  for (int y = 0; y < image.rows; ++y) {
-    for (int x = 0; x < image.cols; ++x) {
-      float sum = 0.0;
-      for (int ky = 0; ky < kRows; ++ky) {
-        int i = y + ky - kCenterY;
-        if (i < 0 || i >= image.rows) continue;
-        for (int kx = 0; kx < kCols; ++kx) {
-          int j = x + kx - kCenterX;
-          if (j < 0 || j >= image.cols) continue;
-          sum += kernel.at<float>(ky, kx) * image.at<float>(i, j);
+  // Применяем фильтр
+  for (int y = 0; y < height; ++y) {
+    for (int x = 0; x < width; ++x) {
+      std::vector<float> pixelValue(channels, 0.0f);
+      for (size_t ky = 0; ky < kernel.size(); ++ky) {
+        for (size_t kx = 0; kx < kernel[ky].size(); ++kx) {
+          int imgX = std::max(
+              0,
+              std::min(width - 1, x - static_cast<int>(kernel[ky].size()) / 2 +
+                                      static_cast<int>(kx)));
+          int imgY = std::max(
+              0, std::min(height - 1, y - static_cast<int>(kernel.size()) / 2 +
+                                          static_cast<int>(ky)));
+          const guint8* srcPixel = image->get_pixels() +
+                                   imgY * image->get_rowstride() +
+                                   imgX * channels;
+          float weight = kernel[ky][kx];
+          for (int c = 0; c < channels; ++c) {
+            pixelValue[c] += srcPixel[c] * weight;
+          }
         }
       }
-      result.at<float>(y, x) = sum;
+      guint8* destPixel = resultPixbuf->get_pixels() +
+                          y * resultPixbuf->get_rowstride() + x * channels;
+      for (int c = 0; c < channels; ++c) {
+        destPixel[c] = static_cast<guint8>(pixelValue[c]);
+      }
     }
   }
-  return result;
+
+  return resultPixbuf;
 }
 
 }  // namespace CW1

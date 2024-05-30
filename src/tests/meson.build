@@ -1,5 +1,6 @@
 cw1_testsuites = {
     # 'image': ['hash'],
+    '': [],
 }
 cw1_testsuites_deps = ['main.cc']
 
