@@ -7,7 +7,7 @@ namespace CW1 {
 
 RVHash::RVHash() {}
 
-uint64_t RVHash::compute(const buffer& pixbuf) const {
+RVHash::hash RVHash::compute(const buffer& pixbuf) const {
   // Уменьшение размера изображения
   auto resized = get_scaled(pixbuf, size);
   // Преобразование в оттенки серого
@@ -23,10 +23,10 @@ uint64_t RVHash::compute(const buffer& pixbuf) const {
   return compute(medians, stddeviation);
 }
 
-double RVHash::compare(const uint64_t& lhs, const uint64_t& rhs) const {
+double RVHash::compare(const hash& lhs, const hash& rhs) const {
   // Извлекаем биты хеша для каждого сектора
   std::vector<bool> lhsBits, rhsBits;
-  for (int i = 0; i < sectors; ++i) {
+  for (size_t i = 0; i < sectors; ++i) {
     lhsBits.push_back(lhs & (1ULL << i));
     rhsBits.push_back(rhs & (1ULL << i));
   }
@@ -37,7 +37,7 @@ double RVHash::compare(const uint64_t& lhs, const uint64_t& rhs) const {
 
   // Вычисляем количество совпадающих единиц
   int numMatches = 0;
-  for (int i = 0; i < sectors; ++i)
+  for (size_t i = 0; i < sectors; ++i)
     if (lhsBits[i] && rhsBits[i]) numMatches++;
 
   // Вычисляем пиковый коэффициент корреляции
@@ -73,8 +73,8 @@ RVHash::buffer RVHash::get_scaled(const buffer& pixbuf, int newsize) const {
   float scaleY = static_cast<float>(height) / size;
 
   // Проходим по каждому пикселю нового изображения
-  for (int y = 0; y < size; y++)
-    for (int x = 0; x < size; x++) {
+  for (size_t y = 0; y < size; y++)
+    for (size_t x = 0; x < size; x++) {
       // Находим соответствующий пиксель в исходном изображении с учетом
       // масштабирования
       int srcX = static_cast<int>(x * scaleX);
@@ -194,12 +194,12 @@ float RVHash::get_stddeviation(const sector& sector) const {
   return std::sqrt(squaresSum / sector.size() - std::pow(mean, 2));
 }
 
-uint64_t RVHash::compute(const stats& medians,
+RVHash::hash RVHash::compute(const stats& medians,
                          const stats& stddeviations) const {
-  uint64_t hash = 0;
+  hash hash = 0;
   // Для каждого сектора вычисляем хеш на основе медианы и стандартного
   // отклонения
-  for (int i = 0; i < sectors; ++i) {
+  for (size_t i = 0; i < sectors; ++i) {
     // Вычисляем индекс следующего сектора
     int next = (i + 1) % sectors;
     // Если разница между медианами или стандартными отклонениями превышает

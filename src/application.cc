@@ -2,14 +2,11 @@
 
 #include <glibmm.h>
 
-#include <iomanip>
 #include <iostream>
 
-#include "glibmm/fileutils.h"
 #include "glibmm/optioncontext.h"
 #include "glibmm/optionentry.h"
 #include "glibmm/optiongroup.h"
-#include "rvhash.hh"
 
 namespace CW1 {
 
@@ -23,6 +20,8 @@ Application::Application()
   // define options
   add_main_option_entry(Gtk::Application::OptionType::BOOL, "version", 'v',
                         "Display program version and exit");
+  add_main_option_entry(Gtk::Application::OptionType::BOOL, "recursive", 'r',
+                        "Is directories should be processed recursively");
   add_main_option_entry(Gtk::Application::OptionType::BOOL, "base", 'b',
                         "Compare all images only with first");
   add_main_option_entry(Gtk::Application::OptionType::STRING, "output", 'o',
@@ -81,13 +80,23 @@ ref<Application> Application::create() {
 
 int Application::on_command_line(const ref<Gio::ApplicationCommandLine>& cli) {
   auto options = cli->get_options_dict();
-
-  std::vector<std::string> filepaths;
-  options->lookup_value(G_OPTION_REMAINING, filepaths);
+  auto filepaths =
+      process_options(options);  // Process options and get filepaths
 
   if (filepaths.empty())
     throw Glib::OptionError(Glib::OptionError::BAD_VALUE,
                             "Pass at least one filepath");
+
+  process_filepaths(filepaths);  // Process filepaths
+
+  return 0;
+}
+
+std::vector<std::string> Application::process_options(
+    const Glib::RefPtr<Glib::VariantDict>& options) {
+  std::vector<std::string> filepaths;
+  options->lookup_value("recursive", recursive);
+  options->lookup_value(G_OPTION_REMAINING, filepaths);
 
   rvhash.set_size(side);
   rvhash.set_bins(bins);
@@ -95,31 +104,54 @@ int Application::on_command_line(const ref<Gio::ApplicationCommandLine>& cli) {
   rvhash.set_medianThreshold(medianThreshold);
   rvhash.set_stdDeviationThreshold(stdDeviationThreshold);
 
-  auto basePath = filepaths[0];
-  auto base = rvhash.compute(Gdk::Pixbuf::create_from_file(basePath));
-  filepaths.erase(filepaths.cbegin());
+  return filepaths;
+}
 
-  if (filepaths.size() == 0) {
-    std::cout << basePath << " | " << base << "\n";
-    return 0;
-  }
-
-  size_t longestLength =
-      (*std::max_element(filepaths.begin(), filepaths.end(),
-                         [](const std::string& a, const std::string& b) {
-                           return a.size() < b.size();
-                         }))
-          .size();
-
-  for (const auto& path : filepaths) try {
-      auto pixbuf = Gdk::Pixbuf::create_from_file(path);
-      auto pattern = rvhash.compute(pixbuf);
-      std::cout << std::setw(longestLength) << std::left << path << " | "
-                << pattern << " | " << rvhash.compare(base, pattern) << '\n';
-    } catch (const Glib::FileError& ex) {
-      std::cerr << "Error loading image " << path << ": " << ex.what() << '\n';
+void Application::process_filepaths(
+    const std::vector<std::string>& filepaths) const {
+  for (const auto& path : filepaths) {
+    if (std::filesystem::is_directory(path)) {
+      std::visit(
+          [this](auto&& it) {
+            for (const auto& entry : it) {
+              if (std::filesystem::is_regular_file(entry.path())) {
+                process_file(entry.path().string());
+              }
+            }
+          },
+          recursive ? iterator_type(
+                          std::filesystem::recursive_directory_iterator(path))
+                    : iterator_type(std::filesystem::directory_iterator(path)));
+    } else {
+      process_file(path);
     }
-  return 0;
+  }
+}
+
+void Application::process_file(const std::string& filepath) const {
+  if (!is_image_file(filepath)) return;
+  auto pixbuf = Gdk::Pixbuf::create_from_file(filepath);
+  auto pattern = rvhash.compute(pixbuf);
+  std::cout << filepath << " | " << pattern << '\n';
+}
+
+bool Application::is_image_file(const std::string& filepath) const {
+  try {
+    // Create a Gio::File instance for the file path
+    auto file = Gio::File::create_for_path(filepath);
+
+    // Get the file info to retrieve MIME type
+    auto file_info = file->query_info("standard::content-type");
+
+    // Get the MIME type of the file
+    auto mime_type = file_info->get_content_type();
+
+    // Check if the MIME type indicates an image
+    return mime_type.substr(0, 6) == "image/";
+  } catch (const Glib::Error& ex) {
+    // Failed to get file info or MIME type, treat as non-image
+    return false;
+  }
 }
 
 }  // namespace CW1

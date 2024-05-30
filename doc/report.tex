@@ -17,7 +17,7 @@
 
 \maketitle
 
-\makeappendixpdf{Задание по курсовой работе}{task}*
+\clearpage\makeappendixpdf*{Задание по курсовой работе}*{task}*
 
 \tableofcontents
 
@@ -56,11 +56,11 @@
 требуется быстрый и точный поиск визуально схожих изображений в больших
 коллекциях.
 
-% \include{report1.tex}
+\include{report1.tex}
 \include{report2.tex}
-% \include{report3.tex}
+\include{report3.tex}
 \include{report4.tex}
-% \include{report5.tex}
+\include{report5.tex}
 
 \chapter*{Заключение}
 
@@ -68,33 +68,26 @@
 
 \chapter[обязательное]{Исходный код программы}
 
-\makelisting{../src/application.cc}[src/application.cc]
-\makelisting{../src/application.hh}[src/application.hh]
-\makelisting{../src/gresources.xml}[src/gresources.xml]
-\makelisting{../src/image.hh}[src/image.hh]
-\makelisting{../src/list.hh}[src/list.hh]
+% \makelisting{../src/application.cc}[src/application.cc]
+% \makelisting{../src/application.hh}[src/application.hh]
+% \makelisting{../src/gresources.xml}[src/gresources.xml]
 \makelisting{../src/main.cc}[src/main.cc]
-\makelisting{../src/main.hh}[src/main.hh]
-\makelisting{../src/views/about.ui}[src/views/about.ui]
-\makelisting{../src/views/application.ui}[src/views/application.ui]
-\makelisting{../src/views/preferences.ui}[src/views/preferences.ui]
+\makelisting{../src/rvhash.hh}[src/rvhash.hh]
+\makelisting{../src/rvhash.cc}[src/rvhash.cc]
+% \makelisting{../src/list.hh}[src/list.hh]
+% \makelisting{../src/main.hh}[src/main.hh]
+% \makelisting{../src/views/about.ui}[src/views/about.ui]
+% \makelisting{../src/views/application.ui}[src/views/application.ui]
+% \makelisting{../src/views/preferences.ui}[src/views/preferences.ui]
 
-\chapter[справочное]{Код файлов конфигурации}
+% \makeappendix{обязательное}{Диаграмма вариантов использования}{}
 
-\makelisting{../meson_options.txt}[meson\_options.txt]
-\makelisting{../meson.build}[meson.build]
-\makelisting{../po/meson.build}[po/meson.build]
-\makelisting{../src/assets/meson.build}[src/assets/meson.build]
-\makelisting{../src/meson.build}[src/meson.build]
+% \makeappendix[обязательное]{Диаграмма деятельности}{}
 
-% \makeappendix{справочное}{Функция перцептивного хеша}{}
+% \makeappendix[справочное]{Схемы алгоритмов}{}
 
-% \makeappendix[справочное]{Алгоритм обхода коллекции}{inventory.crop}
+% \makeappendix[справочное]{Диаграмма классов}{}
 
-% \makeappendix{справочное}{Диаграмма деятельности}{}
-
-% \makeappendix{справочное}{Диаграмма классов}{}
-
-\makeappendixpdf{Ведомость документов}{inventory}
+\makeappendixpdf*{Ведомость документов}*{inventory}
 
 \end{document}

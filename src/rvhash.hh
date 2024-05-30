@@ -19,10 +19,12 @@ class RVHash {
   float medianThreshold = 10.0;
 
  public:
+  using hash = uint64_t;
+
   RVHash();
 
-  uint64_t compute(const buffer& pixbuf) const;
-  double compare(const uint64_t& lhs, const uint64_t& rhs) const;
+  hash compute(const buffer& pixbuf) const;
+  double compare(const hash& lhs, const hash& rhs) const;
 
   void set_size(size_t size);
   void set_bins(size_t bins);
@@ -39,7 +41,7 @@ class RVHash {
                         stats& stddeviations) const;
   float get_median(const sector& sector) const;
   float get_stddeviation(const sector& sector) const;
-  uint64_t compute(const stats& medians, const stats& stddeviations) const;
+  hash compute(const stats& medians, const stats& stddeviations) const;
   buffer get_gaussian_blur(const buffer& pixbuf) const;
   kernel get_gaussian_kernel(const int& size) const;
   buffer get_filtered(const buffer& pixbuf, const kernel& kernel) const;
