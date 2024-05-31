@@ -1,12 +1,15 @@
 #include "application.hh"
 
 #include <glibmm.h>
+#include <glibmm/optioncontext.h>
+#include <glibmm/optionentry.h>
+#include <glibmm/optiongroup.h>
+#include <glibmm/refptr.h>
 
 #include <iostream>
 
-#include "glibmm/optioncontext.h"
-#include "glibmm/optionentry.h"
-#include "glibmm/optiongroup.h"
+#include "hashformatter.hh"
+#include "hashprocessor.hh"
 
 namespace CW1 {
 
@@ -21,11 +24,13 @@ Application::Application()
   add_main_option_entry(Gtk::Application::OptionType::BOOL, "version", 'v',
                         "Display program version and exit");
   add_main_option_entry(Gtk::Application::OptionType::BOOL, "recursive", 'r',
-                        "Is directories should be processed recursively");
-  add_main_option_entry(Gtk::Application::OptionType::BOOL, "base", 'b',
-                        "Compare all images only with first");
-  add_main_option_entry(Gtk::Application::OptionType::STRING, "output", 'o',
-                        "Filename to write output", "filepath");
+                        "Process directories recursively");
+  add_main_option_entry(
+      Gtk::Application::OptionType::STRING, "mode", 'm',
+      "Mode of program execution"
+      "     h, hash                 Only compute hashes\n"
+      "     a, all                  All image comparison pairs\n"
+      "     f, first                Compare every image with first in list");
   add_main_option_entry(
       Gtk::Application::OptionType::STRING, "export", 'e',
       "Set results export format\n"
@@ -74,11 +79,12 @@ Application::Application()
   add_option_group(optionsFilters);
 }
 
-ref<Application> Application::create() {
+Glib::RefPtr<Application> Application::create() {
   return Glib::make_refptr_for_instance<Application>(new Application());
 }
 
-int Application::on_command_line(const ref<Gio::ApplicationCommandLine>& cli) {
+int Application::on_command_line(
+    const Glib::RefPtr<Gio::ApplicationCommandLine>& cli) {
   auto options = cli->get_options_dict();
   auto filepaths =
       process_options(options);  // Process options and get filepaths
@@ -87,7 +93,20 @@ int Application::on_command_line(const ref<Gio::ApplicationCommandLine>& cli) {
     throw Glib::OptionError(Glib::OptionError::BAD_VALUE,
                             "Pass at least one filepath");
 
-  process_filepaths(filepaths);  // Process filepaths
+  // Use HashProcessor to process filepaths
+  HashProcessor processor;
+  auto formatter = std::make_shared<const HashFormatter>();
+  processor.set_size(side);
+  processor.set_bins(bins);
+  processor.set_sectors(sectors);
+  processor.set_medianThreshold(medianThreshold);
+  processor.set_stdDeviationThreshold(stdDeviationThreshold);
+  processor.set_recursive(recursive);
+  processor.set_formatter(formatter);
+
+  auto table = processor.process_filepaths(
+      filepaths);  // Process filepaths using HashProcessor
+  processor.format(std::cout, table);
 
   return 0;
 }
@@ -98,60 +117,7 @@ std::vector<std::string> Application::process_options(
   options->lookup_value("recursive", recursive);
   options->lookup_value(G_OPTION_REMAINING, filepaths);
 
-  rvhash.set_size(side);
-  rvhash.set_bins(bins);
-  rvhash.set_sectors(sectors);
-  rvhash.set_medianThreshold(medianThreshold);
-  rvhash.set_stdDeviationThreshold(stdDeviationThreshold);
-
   return filepaths;
-}
-
-void Application::process_filepaths(
-    const std::vector<std::string>& filepaths) const {
-  for (const auto& path : filepaths) {
-    if (std::filesystem::is_directory(path)) {
-      std::visit(
-          [this](auto&& it) {
-            for (const auto& entry : it) {
-              if (std::filesystem::is_regular_file(entry.path())) {
-                process_file(entry.path().string());
-              }
-            }
-          },
-          recursive ? iterator_type(
-                          std::filesystem::recursive_directory_iterator(path))
-                    : iterator_type(std::filesystem::directory_iterator(path)));
-    } else {
-      process_file(path);
-    }
-  }
-}
-
-void Application::process_file(const std::string& filepath) const {
-  if (!is_image_file(filepath)) return;
-  auto pixbuf = Gdk::Pixbuf::create_from_file(filepath);
-  auto pattern = rvhash.compute(pixbuf);
-  std::cout << filepath << " | " << pattern << '\n';
-}
-
-bool Application::is_image_file(const std::string& filepath) const {
-  try {
-    // Create a Gio::File instance for the file path
-    auto file = Gio::File::create_for_path(filepath);
-
-    // Get the file info to retrieve MIME type
-    auto file_info = file->query_info("standard::content-type");
-
-    // Get the MIME type of the file
-    auto mime_type = file_info->get_content_type();
-
-    // Check if the MIME type indicates an image
-    return mime_type.substr(0, 6) == "image/";
-  } catch (const Glib::Error& ex) {
-    // Failed to get file info or MIME type, treat as non-image
-    return false;
-  }
 }
 
 }  // namespace CW1

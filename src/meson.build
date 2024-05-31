@@ -8,6 +8,8 @@ gresources = gnome.compile_resources(
 
 cw1_sources = [
     'application.cc',
+    'hashprocessor.cc',
+    'hashformatter.cc',
     'main.cc',
     'rvhash.cc',
     gresources,
