@@ -2,15 +2,13 @@
 
 #include <gtkmm/application.h>
 
-#include <filesystem>
-#include <variant>
-
 #include "glibmm/refptr.h"
 #include "rvhash.hh"
 
 namespace CW1 {
 
 class Application : public Gtk::Application {
+    
  public:
   Application();
   static Glib::RefPtr<Application> create();
@@ -20,16 +18,8 @@ class Application : public Gtk::Application {
       const Glib::RefPtr<Gio::ApplicationCommandLine>& cli) override;
   std::vector<std::string> process_options(
       const Glib::RefPtr<Glib::VariantDict>& options);
-  void process_filepaths(const std::vector<std::string>& filepaths) const;
-  void process_filepaths(
-      const std::filesystem::directory_iterator& dir_iter) const;
-  void process_file(const std::string& filepath) const;
-  bool is_image_file(const std::string& filepath) const;
 
  private:
-  using iterator_type =
-      std::variant<std::filesystem::directory_iterator,
-                   std::filesystem::recursive_directory_iterator>;
 
   bool recursive = false;
   Glib::OptionGroup optionsFilters;
@@ -40,6 +30,7 @@ class Application : public Gtk::Application {
   double stdDeviationThreshold = 10;
   double medianThreshold = 10;
   RVHash rvhash;
+
 };
 
 }  // namespace CW1

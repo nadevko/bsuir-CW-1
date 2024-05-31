@@ -3,12 +3,313 @@
 
 \section{Физическая структура}
 
+\subsection{src/assets}
+
+\textit{src/assets} -- Каталог с ресурсами приложения.
+
+\subsection{src/assets/logo}
+
+\textit{src/assets/logo} -- Каталог с логотипами приложения.
+
+\subsection{src/assets/logo/128x128.png}
+
+\textit{src/assets/logo/128x128.png} -- Логотип приложения размером 128x128
+пикселей.
+
+\subsection{src/assets/logo/256x256.png}
+
+\textit{src/assets/logo/256x256.png} -- Логотип приложения размером 256x256
+пикселей.
+
+\subsection{src/assets/logo/512x512.png}
+
+\textit{src/assets/logo/512x512.png} -- Логотип приложения размером 512x512
+пикселей.
+
+\subsection{src/assets/logo/scalable.svg}
+
+\textit{src/assets/logo/scalable.svg} -- Логотип приложения в векторном формате.
+
+\subsection{src/assets/meson.build}
+
+\textit{src/assets/meson.build} -- Файл сборки ресурсов.
+
+\subsection{src/assets/template.desktop}
+
+\textit{src/assets/template.desktop} -- Шаблон файла \textit{.desktop} для
+создания ярлыка приложения.
+
+\subsection{src/gresources.xml}
+
+\textit{src/gresources.xml} -- Перечень ресурсов приложения для их загрузки в
+приложении.
+
+\subsection{src/tests}
+
+\textit{src/tests} -- Каталог с модульными тестами.
+
+\subsection{src/tests/meson.build}
+
+\textit{src/tests/meson.build} -- Файл сборки модульных тестов.
+
+\subsection{src/tests/main.cc}
+
+\textit{src/tests/main.cc} -- Точка входа в модульные тесты.
+
+\subsection{src/views}
+
+\textit{src/views} -- Каталог с файлами пользовательского интерфейса.
+
+\subsection{src/views/about.ui}
+
+\textit{src/views/about.ui} -- Файл пользовательского интерфейса для окна
+\textit{About}.
+
+\subsection{src/views/application.ui}
+
+\textit{src/views/application.ui} -- Файл пользовательского интерфейса для
+главного окна приложения.
+
+\subsection{src/views/popover.ui}
+
+\textit{src/views/popover.ui} -- Файл пользовательского интерфейса для
+всплывающего окна.
+
+\subsection{src/views/preferences.ui}
+
+\textit{src/views/preferences.ui} -- Файл пользовательского интерфейса для окна
+настроек.
+
+\subsection{src/views/project.cmb}
+
+\textit{src/views/project.cmb} -- Файл проекта \textit{Cambalache}.
+
+\subsection{src/main.cc}
+
+\textit{src/main.cc} -- Точка входа в приложение. В нем инициализируются
+\textit{GetText} и \textit{adwaita}, создается экземпляр
+\textit{CW1::Application} и запускается само приложение.
+
+\subsection{src/meson.build}
+
+\textit{src/meson.build} -- Файл сборки приложения. В нем собирается
+испольняемый файл, загружается \textit{GResource} и запускается сборка тестов и
+ресурсов.
+
+\subsection{src/rvhash.hh}
+
+\textit{src/rvhash.hh} -- Объявление класса \textit{CW1::RVHash} для хеширования
+(модуль хеширования).
+
+\subsection{src/rvhash.cc}
+
+\textit{src/rvhash.cc} -- Имплементация класса \textit{CW1::RVHash} для
+хеширования (модуль хеширования).
+
+\subsection{src/application.cc}
+
+\textit{src/application.cc} -- Имплементация класса \textit{CW1::Application}
+для инициализации приложения и для обработки опций командной строки (модуль
+приложения).
+
+\subsection{src/application.hh}
+
+\textit{src/application.hh} -- Имплементация класса \textit{CW1::Application} для
+инициализации приложения и для обработки опций командной строки (модуль
+приложения).
+
+\subsection{src/processor.hh}
+
+\textit{src/processor.hh} -- Объявление абстрактных классов
+\textit{CW1::Processor} для обхода файлов (модуль итерации) и
+\textit{CW1::Processor::Formatter} для форматирования вывода (модуль действий).
+
+\subsection{src/hashformatter.cc}
+
+\textit{src/hashformatter.cc} -- Имплементация класса
+\textit{CW1::HashFormatter}, расширяющего класс
+\textit{CW1::Processor::Formatter}, для обхода файлов (модуль итерации).
+
+\subsection{src/hashformatter.hh}
+
+\textit{src/hashformatter.cc} -- Объявление класса
+\textit{CW1::HashFormatter}, расширяющего класс
+\textit{CW1::Processor::Formatter}, для форматирования вывода (модуль действий).
+
+\subsection{src/hashprocessor.cc}
+
+\textit{src/hashprocessor.cc} -- Имплементация класса
+\textit{CW1::HashProcessor}, расширяющего класс \textit{CW1::Processor}, для
+обхода файлов (модуль итерации).
+
+\subsection{src/hashprocessor.hh}
+
+\textit{src/hashprocessor.cc} -- Объявление класса \textit{CW1::HashProcessor},
+расширяющего класс \textit{CW1::Processor}, для обхода файлов (модуль итерации).
+
 \section{Описание разработанных модулей}
 
-\subsection{Взаимодействие классов}
+\subsection*{Модуль приложения}
 
-% \makesvg[Диаграмма классов]{classes}
+\subsubsection{\textit{CW1::Application}}
 
-\subsection{main.cc}
+\textit{CW1::Application} -- класс, наследуемый от \textit{Gtk::Application}. Он
+олицетворяет собою сеанс приложения, запускается из \textit{main}.
 
-Инициализирует программу.
+Публичные методы класса:
+
+\begin{itemize}
+    \item \textit{Application} -- инициализация приложения, включение режима
+          ручной обработки опций программы и объявления опций командной строки.
+    \item \textit{create} -- статический метод, который создает новый экземпляр
+          класса \textit{Application} и возвращает его в виде умного указателя
+          \textit{Glib::RefPtr} (на самом деле, это \textit{std::shared\_ptr}).
+          Создан по аналогии с оригинальным классом \textit{Gtk::Application}
+          для унификации поведения.
+\end{itemize}
+
+Защищенные методы класса:
+
+\begin{itemize}
+    \item \textit{on\_command\_line} -- метод, вызываемый при консольном запуске
+          программы. Он обрабатывает опции командной строки и, если требуется,
+          выполняет методы.
+    \item \textit{on\_activate} -- обработчик сигнала \textit{activate}
+          приложения. Он выполняется только при запуске графической сессии.
+\end{itemize}
+
+Приватные поля класса:
+
+\begin{itemize}
+    \item \textit{optionsFilters} -- объект группы опций. Объединяет те, что
+          связаный настройкой поведения хеш"=функции.
+    \item \textit{side, bins, sectors, sigma, stdDeviationThreshold,
+          medianThreshold, rvhash} -- хранят экземпляр \textit{rvhash} и его
+          параметры (нельзя получить значение опции из группы, не присваивая ее
+          полю класса).
+\end{itemize}
+
+\subsection*{Модуль хеширования}
+
+\subsubsection{\textit{CW1::RVHash}}
+
+\textit{CW1::RVHash} -- класс"=обертка, объединяющий в себе методы все методы
+для вычисления хеша радиальной дисперсии (\textit{Radial Variance Hash}). Методы
+полностью соответствуют шагам, описанным в разделе \ref{sec:2.1}. 
+
+Публичные элементы класса:
+
+\begin{itemize}
+    \item \textit{hash} -- псевдоним типа \textit{uint64\_t}. Формат хеша.
+    \item \textit{compute} -- Вычисляет типа \textit{hash} хеш переданного ему
+          изображения в формате \textit{Gdk::PixBuf} из соответственной
+          библиотеки.
+    \item \textit{compare} -- сравнивает хеши и возвращает
+          \textit{double}"=показатель сходства. При верной конфигурации хеша
+          находится в диапазоне от 0 до 1 и аналогичен проценту шанса
+          совпадения.
+\end{itemize}
+
+Защищенные методы класса:
+
+\begin{itemize}
+    \item \textit{on\_command\_line} -- метод, вызываемый при консольном запуске
+          программы. Он обрабатывает опции командной строки и, если требуется,
+          выполняет методы.
+    \item \textit{on\_activate} -- обработчик сигнала \textit{activate}
+          приложения. Он выполняется только при запуске графической сессии.
+\end{itemize}
+
+Приватные методы класса:
+
+\begin{itemize}
+    \item \textit{get\_scaled} -- возвращает изображение нового размера:
+          квадрат, длина стороны которого равна \textit{size}.
+    \item \textit{get\_grayscale} -- обесцвечивает изображение.
+    \item \textit{get\_sector\_stats} --обертка для метода \textit{get\_median}
+          и \textit{get\_stddeviation}, обрабатывающая нулевые значения.
+    \item \textit{get\_median} -- возвращает медиану значений пикселей
+          изображения.
+    \item \textit{get\_stddeviation} -- возвращает стандартное отклонение
+          значений пикселей изображения.
+    \item \textit{get\_gaussian\_blur} -- возвращает изображение, размытое
+          гауссовым фильтром.
+    \item \textit{get\_gaussian\_kernel} -- возвращает ядро гауссова фильтра.
+    \item \textit{get\_filtered} -- возвращает изображение, прошедшее фильтрацию
+          по ядру.
+\end{itemize}
+
+Приватные поля, у каждого из которых есть свой сеттер:
+
+\begin{itemize}
+    \item \textit{size} -- длина стороны квадрата, в который преобразуется
+          изображение.
+    \item \textit{bins} -- интервалы, по аналогии с \textit{OpenCV}. Кажется,
+          они нигде не используются.
+    \item \textit{sectors} -- количество секторов.
+    \item \textit{sigma} -- стандартное отклонение размытия по Гауссу.
+    \item \textit{stdDeviationThreshold} -- пороговое значение стандартного
+          отклонения.
+    \item \textit{medianThreshold} -- порогое значение медианы.
+\end{itemize}
+
+\subsection*{Модуль итерации}
+
+\subsubsection{\textit{CW1::Processor}}
+
+\textit{CW1::Processor} -- абстрактный класс для обхода файловой системы и
+вывода результатов, используя \textit{CW1::Processor::Formatter}. Тоже
+использует внутри себя \textit{CW1::RVHash}, по"=этому дублирует весь набор
+сеттеров и приватных полей параметров хеша.
+
+Публичные элементы класса:
+
+\begin{itemize}
+    \item \textit{Table} -- псевдоним типа \textit{std::map<std::string,
+          CW1::RVHash::hash>}. Таблица хешей.
+    \item \textit{process\_filepaths} -- виртуальный метод, возвращает
+          таблицу хешей.
+    \item \textit{process\_file} -- виртуальный метож, который обрабатывает
+          файл и добавляет хеш в таблицу хешей, передаваемую вторым аргументом.
+    \item \textit{set\_recursive} -- сеттер рекурсивного режима.
+    \item \textit{set\_rvhash} -- сеттер экземпляра \textit{CW1::RVHash}.
+    \item \textit{set\_formatter} -- сеттер экземпляра
+          \textit{CW1::Processor::Formatter}.
+    \item \textit{to\_string} -- возвращает строку отфарматированную строку.
+    \item \textit{is\_image\_file} -- проверяет, является ли файл изображением,
+          поддерживаемым \textit{Gdk::PixBuf}, за счет попытки его создания.
+\end{itemize}
+
+\subsubsection{\textit{CW1::HashProcessor}}
+
+\textit{CW1::HashProcessor} -- реализация абстрактного класса, правила обхода:
+для каждого каталога, обходит его содержимое, каталоги внутри него, только если,
+указан флаг \textit{recursive}. Проверяет все файлы, являются ли они
+изображениями. В полученний таблице будут вектора с одним элементом -- хешем
+этого файла.
+
+Определяет виртуальные методы \textit{process\_filepaths} и
+\textit{process\_file}. Добавляет защищеный метод \textit{process\_directory},
+реализующий рекурсию.
+
+\subsection*{Модуль действий}
+
+\subsubsection*{\textit{CW1::Processor::Formatter}}
+
+Определяет только публичный виртуальный метод \textit{format}, который принимает
+таблицу хешей и поток вывода, в который он записывает результаты.
+
+\subsubsection*{\textit{CW1::HashFormatter}}
+
+Реализует вывод хешей в форме: \textquote{путь к файлу | хеш}. Вывод
+отфарматирован так, что образуется цельтая вертикальная черта.
+
+\vspace{\baselineskip}
+\phantomheading[section]{Заключение}
+
+В разделе были составлены перечни файлов и описаны разработанные модули. Для
+каждого класса и метода дана краткая сводка, упомянуты детали реализации и
+расписаны отношения между классами. Более точную информацию можно найти в
+диаграмме классов, представленной в приложении \ref{sec:В}. Ее точность
+гарантируется тем, что она была сгенерирована автоматически, используя утилиты
+\textit{clang"=uml} и \textit{plantuml}.

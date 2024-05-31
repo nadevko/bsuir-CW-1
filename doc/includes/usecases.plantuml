@@ -1,51 +1,58 @@
-@startuml usecases
+@startuml
 !theme mono
 :Пользователь: as user
-(Работа с файлами) as unite
-(Удалить дубликаты) as dup
-(Найти файлы по критериям) as find
-(Удалить файлы) as remove
-(Переместить файлы) as move
-(Скопировать файлы) as cp
-(Переименовать файлы) as rename
-(Сконвертировать файлы) as convert
+(Вычисление хешей изображений) as hashing
+(Дедубликация) as dedublication
+(Составление списка изображений) as listing
+(Просмотр изображений) as view
+(Конфигурация программы) as config
+(Генерация вывода) as output
 
-unite <|-right- find
-unite <|-down- move
-unite <|-down- remove
-unite <|-up- rename
-unite <|-left- cp
-move <.. convert : <<extend>>
+(Проверка изображение ли) as isimage
+(Рекурсивное составление списка) as recursion
 
-(Поиск по подстроке) as substr
-(Поиск по регулярному выражению) as regex
-(Поиск по проценту схожести) as simularity
+(Установить размер стороны) as sides
+(Установить интервалы) as bins
+(Установить число секторов) as sectors
+(Установить сигму) as sigma
+(Установить предел стандартного отклонения) as deviation
+(Установить предел медианы) as median
+(Установить генерируемый формат) as format
 
-user -down- unite
-simularity ..> dup : <<include>>
-remove ..> dup : <<include>>
-unite <|-- dup
-rename -|> move
+(Генерация txt) as txt
+(Генерация shell) as shell
+(Генерация json) as json
+(Генерация csv) as csv
 
-find <.. substr : <<extend>>
-find <.up. regex : <<extend>>
-find <.down. simularity : <<extend>>
 
-(Просмотр выборки файлов) as view
-view -down-|> unite
-view - user
+user - dedublication
+user - view
+user -d- config
+user -r- output
+user - listing
 
-(Сортировка выборки файлов) as sort
-(Сортировка по имени) as name
-(Сортировка по дате изменения) as date
-(Сортировка по размеру) as size
-sort .down.> view : <<include>>
-sort <|-up- name
-sort <|-right- date
-sort <|-up- size
+dedublication <.. listing : <<include>>
+hashing <.. config : <<include>>
 
-(Очистка) as clean
-unite <|- clean
-dup ..> clean : <<include>>
-convert ..> clean : <<include>>
+listing <. recursion : <<extend>>
+listing <.. hashing : <<include>>
+listing <. isimage : <<include>>
+
+
+config <.u. sides : <<include>>
+config <.u. bins : <<include>>
+config <.r. sectors : <<include>>
+config <.u. sigma : <<include>>
+config <.. deviation : <<include>>
+config <.. median : <<include>>
+config <.. format : <<include>>
+config <.. recursion : <<include>>
+
+view <.. output : <<include>>
+
+output <-.. listing : <<include>>
+output <|-l- shell
+output <|-u- txt
+output <|-d- json
+output <|-u- csv
 @enduml

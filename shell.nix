@@ -1,5 +1,6 @@
 with import <nixpkgs> { };
-mkShell rec {
+(mkShell.override { stdenv = clangStdenv; }) rec {
+# mkShell rec {
   nativeBuildInputs = [
     meson
     ninja

@@ -1,3 +1,44 @@
 \chapter{Применение программы}
 
 \section{Руководство пользователя}
+
+\subsection{Установка программы}
+
+Поддерживается установка как пакета, используя пакетный менеджер \textit{nix},
+дистрибутива \textit{NixOS}. Для этого необходимо выполнить следующие шаги:
+
+\begin{enumerate}
+    \item Получить код из репозитория на \textit{GitHub}:
+          \url{https:://github.com/nadevko/bsuir-CW1}. Для этого выполнить
+          команду: \texttt{git clone https://github.com/nadevko/bsuir-CW1}.
+    \item Перейти в директорию с проектом: \texttt{cd bsuir-CW1}.
+    \item Установить пакет: \texttt{nix-env -if .}. Он будет скомпилирован и добавлен
+          в систему.
+\end{enumerate}
+
+Альтернативно, можно использовать \textit{nix-shell} для запуска программы в
+изолированной среде. Для этого требуется иная завершающая команда:
+\texttt{nix-\\build -E~'with import <nixpkgs> \{ \}; callPackage}.
+
+\subsection{Справка по использованию}
+
+Программе передается список файлов и каталогов
+
+Программа поддерживает следующие опции командной строки:
+
+\begin{itemize}
+    \item \texttt{-h, --help} -- выводит справку по использованию;
+    \item \texttt{--help-all} -- выводит все параметры справки;
+    \item \texttt{--help-gapplication} -- показывает параметры
+          \textit{GApplication};
+    \item \texttt{--help-hash} -- выводит справку по параметрам хеширования;
+    \item \texttt{-v, --version} -- выводит версию программы;
+    \item \texttt{-r, --recursive} -- осматривает каталоги рекурсивко;
+    \item \texttt{-m, --mode} -- определяет режим работы программы;
+    \item \texttt{-e, --export} -- определяет формат вывода результата;
+    \item \texttt{-s, --side} -- устанавливает длину строки;
+    \item \texttt{-b, --bins} -- размер интервалов;
+    \item \texttt{--sigma} -- стандартное отклонение размытия по Гауссу;
+    \item \texttt{--deviation} -- значение стандартного отклонения;
+    \item \texttt{--median} -- значение отклонения медианы.
+\end{itemize}

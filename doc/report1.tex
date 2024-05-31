@@ -141,17 +141,17 @@
 \makefigure{odiff}{
     \begin{subfigure}{.33\textwidth}
         \centering
-        \includegraphics[width=.95\linewidth]{odiff1.jpg}
+        \includegraphics[width=.95\linewidth]{odiff1.jpg}\label{img:odiff1.jpg}
     \end{subfigure}%
     \begin{subfigure}{.33\textwidth}
         \centering
-        \includegraphics[width=.95\linewidth]{odiff2.jpg}
+        \includegraphics[width=.95\linewidth]{odiff2.jpg}\label{img:odiff2.jpg}
     \end{subfigure}%
     \begin{subfigure}{.33\textwidth}
         \centering
-        \includegraphics[width=.95\linewidth]{odiff3.png}
+        \includegraphics[width=.95\linewidth]{odiff3.png}\label{img:odiff3.png}
     \end{subfigure}
-    \caption{Пример работы \textit{odiff}: эталон, паттерн, разница}
+    \caption{Пример работы \textit{odiff}: эталон, паттерн, разница}\label{odiff}
 }
 
 \subsection{ImageDeDup}
@@ -235,7 +235,7 @@
 
 \subsection{Задача}
 Главное назначение программы -- составление списков изображений на основании их
-показателя сходства и его интерпретации с последующим экспортом или обработкой. 
+показателя сходства и его интерпретации с последующим экспортом или обработкой.
 
 \subsection{Загрузка изображений}
 Программа должна поддерживать самые популярные форматы изображений:
